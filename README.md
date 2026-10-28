@@ -87,6 +87,8 @@ git add -A; git commit -m "指向问答代理"; git push
 
 > `.env` 里放 `Dify_key=app-xxxx` 仅供本地/服务器使用，已在 `.gitignore` 中，不会进仓库。如果 Key 曾经出现在提交历史或截图里，去 Dify 后台重置。
 
+完整的技术方案、协议细节、安全边界与踩坑清单见 **[docs/ai-integration.md](docs/ai-integration.md)**（含约 2 分钟的面试讲述版）。
+
 ## 部署到 GitHub Pages
 
 仓库已推到 `main`，Pages 只需在网页上开启一次（Settings 无法用 git 命令设置）：
