@@ -255,6 +255,8 @@ kbd {
   border-color: color-mix(in srgb, var(--accent) 40%, var(--rule));
   box-shadow: var(--shadow);
 }
+/* .card 显式设了 display:flex，会盖掉 UA 的 [hidden]{display:none}，筛选必须显式处理 */
+.cards .card[hidden] { display: none; }
 .card-no {
   font-family: var(--serif);
   font-size: 12px;
