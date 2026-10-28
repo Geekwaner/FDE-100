@@ -11,6 +11,7 @@ Datawhale《FDE案例100》的静态阅读站点。纯 HTML / CSS / JavaScript�
 | --- | --- |
 | `index.html` | 首页：24 个案例卡片、按行业筛选、全站搜索入口 |
 | `cases/no-XX.html` | 单个案例详情：案例简介、适用人群、Q1–Q6 六个问答、上下篇导航 |
+| `chat.html` | AI 问答：内嵌 Dify 聊天机器人（`udify.app`），带加载态与兜底链接 |
 | `appendix.html` | 附录 A 案例索引 + 附录 B 前言 |
 | `all.html` | 24 个案例全文单页版（适合 Ctrl+F 与打印） |
 | `404.html` | GitHub Pages 自定义 404 |
@@ -40,6 +41,23 @@ python -m http.server 8765    # 打开 http://127.0.0.1:8765
 之后每次 `git push` 到 `main`，Pages 会自动重新发布，不需要额外配置 CI。
 
 > 站点根目录已放 `.nojekyll`，跳过 Jekyll 处理；所有链接都是相对路径，所以放在子路径（`/FDE-100/`）下也不会出错。如果以后要绑自定义域名，在 Pages 设置里填域名即可，不用改代码。
+
+## AI 问答（Dify 嵌入）
+
+`chat.html` 用 `<iframe>` 内嵌 Dify 的聊天机器人，地址在 `build_site.py` 的 `CHAT_URL` 常量里，换应用只改这一处：
+
+```python
+CHAT_URL = "https://udify.app/chatbot/uebvgPRnJKxeb3eY"
+```
+
+交互做了三件事：
+
+- 页面铺满视口（`calc(100dvh - 页头高度)`），不再嵌套滚动条
+- 加载遮罩 + 12 秒后提示「可直接在新窗口打开」——`udify.app` 的 JS 分包较大，实测单个 chunk 在慢网络下要几十秒
+- 站内其它入口：首页「向 AI 提问」按钮、每个案例页底部「直接问 AI」
+
+> 如果 Dify 那边换了域名（如 `cloud.dify.ai`）或应用重新发布，同步改 `CHAT_URL` 后重跑 `build_site.py` 即可。
+> 想换成右下角悬浮气泡样式，Dify 也提供 `embed.min.js` 方式，可以按需替换。
 
 ## 内容更新流程
 

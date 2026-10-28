@@ -12,6 +12,7 @@
 纯标准库，无需安装依赖，产物直接提交即可用分支方式部署 Pages。
 """
 
+import hashlib
 import html
 import json
 import re
@@ -25,6 +26,9 @@ CASES_DIR = ROOT / "cases"
 
 SITE_NAME = "FDE 案例 100"
 SITE_SUB = "Datawhale FDE 案例集 · 24 个真实企业 AI 落地现场"
+
+# 静态资源指纹：CSS/JS 改动后 URL 自动变化，避免浏览器用旧缓存
+ASSET_VER = ""
 
 RE_CASE = re.compile(r"^##\s+(NO\.\d+)\s*(.+)$")
 RE_Q = re.compile(r"^###\s+(Q\d+)\s*\[(NO\.\d+)\s+([^\]]+)\]\s*[：:]\s*(.+)$")
@@ -199,8 +203,9 @@ def excerpt(case: dict, n: int = 78) -> str:
 def shell(title: str, root: str, body: str, active: str = "", desc: str = SITE_SUB) -> str:
     nav = [
         ("index.html", "案例索引", "index"),
-        ("appendix.html", "前言", "appendix"),
         ("all.html", "全文", "all"),
+        ("chat.html", "AI 问答", "chat"),
+        ("appendix.html", "前言", "appendix"),
     ]
     links = "".join(
         f'<a class="nav-link{" is-active" if key == active else ""}" href="{root}{href}">{label}</a>'
@@ -217,9 +222,9 @@ def shell(title: str, root: str, body: str, active: str = "", desc: str = SITE_S
 <meta property="og:title" content="{html.escape(title)}">
 <meta property="og:description" content="{html.escape(desc)}">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23b3402b'/%3E%3Ctext x='16' y='22' font-family='Georgia,serif' font-size='15' fill='%23faf7f0' text-anchor='middle'%3EF%3C/text%3E%3C/svg%3E">
-<link rel="stylesheet" href="{root}assets/style.css">
+<link rel="stylesheet" href="{root}assets/style.css{ASSET_VER}">
 </head>
-<body data-root="{root}">
+<body data-root="{root}" data-ver="{ASSET_VER}" class="page-{active or 'doc'}">
 <div class="progress" id="progress"></div>
 <header class="site-header">
   <a class="brand" href="{root}index.html">
@@ -247,7 +252,7 @@ def shell(title: str, root: str, body: str, active: str = "", desc: str = SITE_S
     <ul class="search-results" id="search-results"></ul>
   </div>
 </div>
-<script src="{root}assets/app.js"></script>
+<script src="{root}assets/app.js{ASSET_VER}"></script>
 </body>
 </html>
 """
@@ -290,6 +295,10 @@ def build_index(cases: list[dict]) -> str:
       <div><dt>问答</dt><dd>{sum(len(c['qas']) for c in cases)}</dd></div>
       <div><dt>行业</dt><dd>{len(industries)}</dd></div>
     </dl>
+    <p class="hero-actions">
+      <a class="btn-cta" href="chat.html">向 AI 提问<span>→</span></a>
+      <a class="btn-ghost" href="all.html">读全文</a>
+    </p>
   </section>
 
   <section class="filterbar">
@@ -369,6 +378,7 @@ def build_case(case: dict, prev: dict | None, nxt: dict | None, cases: list[dict
       </div>
 
       {''.join(pager)}
+      <p class="case-ask">对 {no} 这个案例还有疑问？<a href="../chat.html">直接问 AI →</a></p>
       <p class="case-back"><a href="../index.html">← 返回案例索引</a></p>
     </article>
 
@@ -445,6 +455,40 @@ def build_all(cases: list[dict]) -> str:
     return shell(f"全文 · {SITE_NAME}", "", body, active="all")
 
 
+# ---------------------------------------------------------------- AI 问答（Dify 嵌入）
+CHAT_URL = "https://udify.app/chatbot/uebvgPRnJKxeb3eY"
+
+
+def build_chat() -> str:
+    body = f"""
+<main class="chat-wrap">
+  <div class="chat-bar">
+    <span class="chat-note">基于本案例集知识库回答，可能不准确 —— 请回<a href="index.html">案例原文</a>核对。</span>
+    <a class="chat-open" href="{CHAT_URL}" target="_blank" rel="noopener noreferrer">新窗口打开 ↗</a>
+  </div>
+  <div class="chat-frame">
+    <div class="chat-loading" id="chat-loading">
+      <div class="chat-loading-inner">
+        <span class="spinner" aria-hidden="true"></span>
+        <p class="chat-loading-title">正在载入问答界面…</p>
+        <p class="chat-loading-sub" id="chat-loading-sub">问答由 Dify 托管（udify.app），资源较大；网络较慢时可能需要半分钟以上。<a href="{CHAT_URL}" target="_blank" rel="noopener noreferrer">在新窗口打开</a></p>
+      </div>
+    </div>
+    <iframe
+      src="{CHAT_URL}"
+      title="FDE 案例 100 · AI 问答"
+      frameborder="0"
+      allow="microphone;clipboard-write"
+      loading="eager"></iframe>
+  </div>
+  <noscript>
+    <p class="chat-note">当前浏览器未启用 JavaScript，请<a href="{CHAT_URL}">在新窗口打开问答</a>。</p>
+  </noscript>
+</main>
+"""
+    return shell(f"AI 问答 · {SITE_NAME}", "", body, active="chat", desc="基于 FDE 案例 100 知识库的 AI 问答")
+
+
 # ---------------------------------------------------------------- 404
 def build_404() -> str:
     body = """
@@ -487,6 +531,12 @@ def build_search_index(cases: list[dict]) -> str:
 
 
 def main() -> None:
+    global ASSET_VER
+    digest = hashlib.md5()
+    for name in ("app.js", "style.css"):
+        digest.update((ASSETS / name).read_bytes())
+    ASSET_VER = "?v=" + digest.hexdigest()[:8]
+
     md = SRC.read_text(encoding="utf-8")
     cases, preface = parse(md)
     if len(cases) != 24:
@@ -503,6 +553,7 @@ def main() -> None:
     (ROOT / "index.html").write_text(build_index(cases), encoding="utf-8")
     (ROOT / "appendix.html").write_text(build_appendix(cases, preface), encoding="utf-8")
     (ROOT / "all.html").write_text(build_all(cases), encoding="utf-8")
+    (ROOT / "chat.html").write_text(build_chat(), encoding="utf-8")
     (ROOT / "404.html").write_text(build_404(), encoding="utf-8")
     (ASSETS / "search-index.js").write_text(build_search_index(cases), encoding="utf-8")
     (ROOT / ".nojekyll").write_text("", encoding="utf-8")

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI 问答 · FDE 案例 100</title>
+<meta name="description" content="基于 FDE 案例 100 知识库的 AI 问答">
+<meta property="og:type" content="website">
+<meta property="og:title" content="AI 问答 · FDE 案例 100">
+<meta property="og:description" content="基于 FDE 案例 100 知识库的 AI 问答">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23b3402b'/%3E%3Ctext x='16' y='22' font-family='Georgia,serif' font-size='15' fill='%23faf7f0' text-anchor='middle'%3EF%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="assets/style.css?v=a432c096">
+</head>
+<body data-root="" data-ver="?v=a432c096" class="page-chat">
+<div class="progress" id="progress"></div>
+<header class="site-header">
+  <a class="brand" href="index.html">
+    <span class="brand-mark">FDE</span>
+    <span class="brand-text">案例 100</span>
+  </a>
+  <nav class="site-nav"><a class="nav-link" href="index.html">案例索引</a><a class="nav-link" href="all.html">全文</a><a class="nav-link is-active" href="chat.html">AI 问答</a><a class="nav-link" href="appendix.html">前言</a></nav>
+  <button class="search-btn" id="search-open" type="button" aria-label="搜索全文">
+    <span class="search-btn-icon">⌕</span><span class="search-btn-text">搜索</span><kbd>Ctrl K</kbd>
+  </button>
+</header>
+
+<main class="chat-wrap">
+  <div class="chat-bar">
+    <span class="chat-note">基于本案例集知识库回答，可能不准确 —— 请回<a href="index.html">案例原文</a>核对。</span>
+    <a class="chat-open" href="https://udify.app/chatbot/uebvgPRnJKxeb3eY" target="_blank" rel="noopener noreferrer">新窗口打开 ↗</a>
+  </div>
+  <div class="chat-frame">
+    <div class="chat-loading" id="chat-loading">
+      <div class="chat-loading-inner">
+        <span class="spinner" aria-hidden="true"></span>
+        <p class="chat-loading-title">正在载入问答界面…</p>
+        <p class="chat-loading-sub" id="chat-loading-sub">问答由 Dify 托管（udify.app），资源较大；网络较慢时可能需要半分钟以上。<a href="https://udify.app/chatbot/uebvgPRnJKxeb3eY" target="_blank" rel="noopener noreferrer">在新窗口打开</a></p>
+      </div>
+    </div>
+    <iframe
+      src="https://udify.app/chatbot/uebvgPRnJKxeb3eY"
+      title="FDE 案例 100 · AI 问答"
+      frameborder="0"
+      allow="microphone;clipboard-write"
+      loading="eager"></iframe>
+  </div>
+  <noscript>
+    <p class="chat-note">当前浏览器未启用 JavaScript，请<a href="https://udify.app/chatbot/uebvgPRnJKxeb3eY">在新窗口打开问答</a>。</p>
+  </noscript>
+</main>
+
+<footer class="site-footer">
+  <p>内容来源：Datawhale《FDE案例100》（2026 年 9 月），本站为非官方阅读版，仅供学习交流。</p>
+  <p class="footer-meta">由 <code>build_site.py</code> 从 Markdown 生成 · 托管于 GitHub Pages</p>
+</footer>
+<div class="search-overlay" id="search-overlay" hidden>
+  <div class="search-panel" role="dialog" aria-modal="true" aria-label="全文搜索">
+    <div class="search-field">
+      <span class="search-btn-icon">⌕</span>
+      <input id="search-input" type="search" placeholder="搜索案例、行业、痛点、方案……" autocomplete="off">
+      <kbd>Esc</kbd>
+    </div>
+    <div class="search-hint" id="search-hint">输入关键词，例如「OCR」「财务对账」「知识库」</div>
+    <ul class="search-results" id="search-results"></ul>
+  </div>
+</div>
+<script src="assets/app.js?v=a432c096"></script>
+</body>
+</html>

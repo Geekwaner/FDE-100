@@ -54,7 +54,7 @@
     if (indexLoading) return;
     indexLoading = true;
     var s = document.createElement('script');
-    s.src = (document.body.dataset.root || '') + 'assets/search-index.js';
+    s.src = (document.body.dataset.root || '') + 'assets/search-index.js' + (document.body.dataset.ver || '');
     s.onload = function () {
       indexLoading = false;
       indexWaiters.splice(0).forEach(function (f) { f(); });
@@ -283,6 +283,21 @@
     jump.addEventListener('change', function () {
       if (jump.value) window.location.href = jump.value;
     });
+  }
+
+  /* ---------------------------------------------------------- AI 问答页加载态 */
+  var chatIframe = document.querySelector('.chat-frame iframe');
+  var chatLoading = document.getElementById('chat-loading');
+  var chatSub = document.getElementById('chat-loading-sub');
+  if (chatIframe && chatLoading) {
+    var reveal = function () { chatLoading.classList.add('is-hidden'); };
+    chatIframe.addEventListener('load', reveal);
+    setTimeout(function () {
+      if (!chatLoading.classList.contains('is-hidden') && chatSub) {
+        chatSub.innerHTML = '依赖 udify.app，网络较慢时首次加载可能超过一分钟。可以<a href="' +
+          chatIframe.getAttribute('src') + '" target="_blank" rel="noopener noreferrer">直接在新窗口打开</a>。';
+      }
+    }, 12000);
   }
 
   /* ---------------------------------------------------------- 空闲预取检索索引 */
