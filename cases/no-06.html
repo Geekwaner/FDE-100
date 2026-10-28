@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NO.6 从经验装车到智能规划 · FDE 案例 100</title>
+<meta name="description" content="NO.6 从经验装车到智能规划：FDE用AI优化跨境物流装载效率">
+<meta property="og:type" content="website">
+<meta property="og:title" content="NO.6 从经验装车到智能规划 · FDE 案例 100">
+<meta property="og:description" content="NO.6 从经验装车到智能规划：FDE用AI优化跨境物流装载效率">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23b3402b'/%3E%3Ctext x='16' y='22' font-family='Georgia,serif' font-size='15' fill='%23faf7f0' text-anchor='middle'%3EF%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body data-root="../">
+<div class="progress" id="progress"></div>
+<header class="site-header">
+  <a class="brand" href="../index.html">
+    <span class="brand-mark">FDE</span>
+    <span class="brand-text">案例 100</span>
+  </a>
+  <nav class="site-nav"><a class="nav-link is-active" href="../index.html">案例索引</a><a class="nav-link" href="../appendix.html">前言</a><a class="nav-link" href="../all.html">全文</a></nav>
+  <button class="search-btn" id="search-open" type="button" aria-label="搜索全文">
+    <span class="search-btn-icon">⌕</span><span class="search-btn-text">搜索</span><kbd>Ctrl K</kbd>
+  </button>
+</header>
+
+<main class="wrap">
+  <div class="case-layout">
+    <article class="case">
+      <p class="case-kicker">NO.6 · 跨境物流</p>
+      <h1 class="case-title">从经验装车到智能规划：FDE用AI优化跨境物流装载效率</h1>
+      
+      <p class="case-speaker">讲述人：刘春生 ｜ 黑河市图南人工智能有限责任公司（OPC）创始人</p>
+      <blockquote class="case-quote">把老师傅脑子里的经验，变成一线工人手里拿得动的方案——FDE才算真正落地。</blockquote>
+      <div class="case-tags"><span class="tag">跨境物流</span><span class="tag">智能调度</span><span class="tag">装载优化</span><span class="tag">供应链数字化</span></div>
+
+      <section class="case-intro">
+        <h2 class="section-label">案例简介</h2>
+        <p class="case-lead">跨境物流中，货车装载效率直接影响运输成本。过去，企业主要依靠装车人员经验完成货物摆放，但面对复杂车型和多种货物组合时，很难快速找到最优方案。本案例中，刘春生深入业务现场，将大模型调度能力与三维装箱算法结合，把经验型装车转化为可计算、可执行的智能规划方案，帮助企业稳定提升空间利用率、跨过运输保本线，并推动AI真正落地到物流业务流程中。更进一步，这套方案把单车装载时间从约5小时压缩到约2小时，让工人、物流公司、货主三方在“增量”里共同受益。</p>
+        <h2 class="section-label">适用人群</h2>
+        <ul class="audience"><li>跨境物流、供应链、仓储运输行业从业者</li><li>智能调度、业务流程优化等AI应用场景相关团队</li><li>FDE、AI产品经理、企业AI应用负责人</li></ul>
+      </section>
+
+      <div class="qa-list">
+        <section class="qa" id="q1">
+  <h2 class="q-title"><span class="q-badge">Q1</span><span>作为FDE，你应用AI的具体场景是什么？在这个场景下遇到的具体问题长什么样？</span><a class="q-anchor" href="#q1" aria-label="复制本段链接">#</a></h2>
+  <p>这个案例的应用场景是在黑河自贸区中俄跨境贸易中的货车装载优化。<br>当地很多企业通过公路运输方式向俄罗斯出口机电产品。在跨境物流中，运输成本是企业非常关注的一部分，而货车每一次出境运输，本质上都是一次固定成本投入。<br>当地很多企业通过公路运输方式向俄罗斯出口机电产品。跨境运输的运费按“方”计算，也就是说，这本质上是一场关于“车厢容积”的生意。<br>这里有一条非常硬的经济线：一辆约110方的货车，老师傅人工装载通常要5个小时，能装到95～98方；而98方就是保本线。更关键的是，每超过保本线1立方米，就能额外增收100美元运费。所以装载率不是技术指标，是利润开关：装不满98方就亏，装得越满、越过保本线越多，赚得越多。<br>简单来说，一辆货车无论装多少货，都需要支付同样的运输费用，包括司机成本、燃油成本、过境费用等。如果一辆车只装了一部分空间就发出去，剩余空间浪费掉，但运输成本并不会降低。<br>因此，对于企业来说，提高单车装载量、尽可能利用车厢空间，就意味着同样一趟运输可以承载更多货物，降低单件商品的物流成本，提高整体利润。<br>但在实际业务中，”把货装满”远不是往车里塞更多东西那么简单，这本质上是一个复杂的空间优化问题。<br>一开始接触这个项目时，很多人会认为这只是一个简单的装箱问题，只需要计算一下哪些货物怎么摆放，就能提高装载率。但真正进入现场之后，我发现事情远比想象复杂。<br>过去，企业装车主要依靠经验丰富的老师傅完成。他们根据货物尺寸、数量以及过往经验判断：哪些货物应该放在哪里；哪些空间还能利用；怎样摆放能够装得更多。<br>但随着跨境贸易规模扩大，这种方式逐渐暴露出问题。<br>首先，是车辆空间判断不准确。<br>俄罗斯方面提供的很多车辆信息是车厢外部尺寸，但真正能够使用的内部空间会受到车厢壁厚、保温层等因素影响，实际可利用空间往往比理论数据少5%～8%。<br>其次，是空间利用率不高。<br>过去没有标准化的三维规划方案，装车主要靠人工经验。同样一批货，不同装车人员可能得到不同结果，整体空间利用率通常只有60%～65%左右，大量空间没有被充分利用。<br>第三，是复杂场景下人工很难找到最优方案。<br>比如企业面对不同车型、不同尺寸货物，以及多辆车同时安排运输时，需要同时考虑空间、重量、运输效率等多个因素，这已经超出了人工经验能够处理的范围。<br>但在调研过程中，我发现最关键的问题其实是算出来以后落地不了：算得出最优解，不代表现场能够执行。<br>很多算法方案能够告诉企业理论上的最佳摆放方式，但现场工人真正执行时，会遇到很多问题：货物应该从哪里开始放？装载顺序是否合理？是否需要进入车厢内部操作？这样的方案是否符合现场安全要求？<br>所以，这个问题本质上是连接业务现场、算法能力和执行流程的综合问题，远不止算法优化本身。<br>攻克技术问题只是第一步，真正要做的是让AI进入业务流程并产生实际价值。</p>
+</section><section class="qa" id="q2">
+  <h2 class="q-title"><span class="q-badge">Q2</span><span>在你参与之前，这个问题过去是怎么解决的？</span><a class="q-anchor" href="#q2" aria-label="复制本段链接">#</a></h2>
+  <p>在我参与之前，企业主要依靠经验丰富的装车人员进行规划，但是会耗费时间长一些。通常一辆车的装车时间是5~6个小并且达不到最优化的装车效果，装车员其实靠的是体力和时间来获得收入，所以通过这样的优化方式，能够提升装车效率。<br>通常情况下，老师傅会根据过去积累的经验判断：什么货应该放下面；哪些货物可以组合摆放；哪些空间可以利用。<br>这种方式在业务规模较小时能够运行，但随着跨境贸易规模增加，问题越来越明显。<br>首先，经验无法复制。<br>一个优秀装车工人的经验，需要多年积累，新人很难快速掌握。<br>其次，人工无法解决复杂组合问题。<br>如果只是几十件货物，人工还能判断。但当车型、货物种类、数量不断增加之后，人工很难快速找到最优方案。<br>另外，还有一个容易被忽视的问题：过去很多企业尝试过数字化工具，但效果并不好。原因是这些工具通常只解决计算问题，没有考虑实际执行。<br>比如系统生成了一个复杂的三维方案，但是现场工人看不懂，最后还是回到人工经验。<br>所以算法本身不难获得，真正缺乏的是一个连接技术和现场的角色。</p>
+</section><section class="qa" id="q3">
+  <h2 class="q-title"><span class="q-badge">Q3</span><span>后来你使用AI解决这个问题的整体思路和关键步骤是什么？</span><a class="q-anchor" href="#q3" aria-label="复制本段链接">#</a></h2>
+  <p>整个解决过程的起点，是先重新理解业务，技术开发要放在后面。<br>作为FDE，第一步一定是进入现场。<br>我需要先弄清楚：工人到底怎么装？为什么这么装？哪些环节影响效率？哪些事情机器可以替代？哪些事情必须符合人的习惯？<br>通过现场观察，我发现装车流程其实可以拆解成几个步骤：车辆真实尺寸获取、货物信息整理、装载方案计算、多车调度优化、生成装车指导、现场执行以及结果反馈。<br>其中，前面的规划和计算环节适合AI参与，但最终必须回到人的执行。<br>在方案设计上，我们采用的是“大模型负责调度，专业算法负责计算”的方式。<br>很多人会误以为大模型可以直接解决所有问题，但实际上三维装箱涉及复杂空间计算，大模型在这方面难以胜任。<br>所以我们的设计思路是，让大模型理解人的需求并负责调用不同工具，让专业算法完成确定性的计算。<br>具体来说，大模型负责：理解业务人员提出的问题；解析任务需求；调用装箱算法；解释最终结果。<br>而真正的三维空间计算，则由Python算法完成，包括高度图3D空间追踪、贪心放置、多策略排序和遗传算法等。<br>另外，在实际落地过程中，我们做了一个非常重要的调整。<br>最开始，我们希望通过三维可视化系统让工人查看方案。<br>但现场调研后发现，工人在装车环境中并不适合频繁操作手机或者电脑。<br>所以最后我们把算法结果转化成更加简单的形式，就是一张工人能够直接使用的装车指导图。里面包含货物编号、摆放方向、截面示意以及装载顺序。<br>让算法结果真正变成现场可以执行的动作。</p>
+</section><section class="qa" id="q4">
+  <h2 class="q-title"><span class="q-badge">Q4</span><span>相比传统方式，使用AI后的实际效果如何？</span><a class="q-anchor" href="#q4" aria-label="复制本段链接">#</a></h2>
+  <p>目前项目已经完成原型验证。在测试过程中，我们针对长16.4米、宽2.47米、高2.67米（内净约108方）的真实运输车辆进行模拟装载，并结合11种不同规格电动车产品目录进行测试。<br>从结果看，AI系统在不依赖老师傅的前提下，实测稳定达到约99方，逼近车厢容积上限；更重要的是，它把一个原本要靠老师傅5小时经验判断、且结果波动的过程，压缩为分钟级、可复用的标准方案，让“每一车都稳定冲过98方保本线”从靠人变成靠系统。<br>而在现场执行层面，价值更明显：人工装一车通常要约5小时，引入AI规划与指导后，预计可压缩到约2小时，装车效率提升约100%，同样工时内可装载的车次接近翻倍。工人装完一车不用再等、不用再耗，可以立刻接着装下一车。<br>这条时间线一旦打通，收益是三层叠加的：第一，工人同样工时能装更多车，按车次计的收入直接增加；第二，物流公司整体周转效率提升、单车装载最大化，运营效率随之提高；第三，货主每一车都稳定越过98方保本线、逼近容积上限，按“超1方+100美元”的计费结构，多出来的每一方都是实打实的增收。<br>所以，这个项目的意义不是零和博弈里谁省了钱，而是做增量。把5小时压成2小时，多出来的车次、多出来的方，工人、物流公司、货主三方一起分，三方共赢，做增量部分。<br>但对我来说，这个项目最大的价值并不只是装载数字本身，更重要的是，它验证了一种可复制的AI落地方式：过去企业里的很多经验存在于人的脑子里，现在AI可以把它转化成数据和算法，再到最后的可执行方案。原来只有老师傅才能完成的工作，现在可以通过标准化流程复制。</p>
+</section><section class="qa" id="q5">
+  <h2 class="q-title"><span class="q-badge">Q5</span><span>在部署AI过程中，是否遇到了新问题或挑战？你是怎么解决的？</span><a class="q-anchor" href="#q5" aria-label="复制本段链接">#</a></h2>
+  <p>最大的挑战其实来自业务方面，技术层面的问题相对更为可控。<br>第一个挑战是算法结果和现场执行之间存在差距。<br>最开始，算法会优先追求空间利用率最大化。但现场人员告诉我，有些方案虽然理论上更优，但是实际操作很困难。比如需要工人进入车厢内部搬运，或者需要频繁调整货物位置。<br>所以我们重新调整目标，从追求数学上的绝对最优，转向在效率、安全和操作便利之间找到平衡。<br>后来我们设计了“截面法”。简单来说，就是按照车厢截面从里向外规划装载顺序。这样工人只需要站在车门位置操作，不需要踩踏货物进入车厢。<br>第二个挑战是数据获取。<br>车辆真实内部尺寸是计算准确性的基础。<br>如果依靠专业扫描设备，成本较高，企业接受度有限。所以我们采用iPadProLiDAR结合激光测距的方式，在保证精度的同时，把硬件成本控制在约8500元。<br>第三个挑战是让一线人员接受新的方式。<br>技术方案最终需要人使用。所以我们不断调整交互方式，把复杂算法结果转化成简单的编号卡、截面图和打印指导图。<br>FDE的价值就在这里：交付技术只是起点，确保技术真正融入业务流程才是关键。</p>
+</section><section class="qa" id="q6">
+  <h2 class="q-title"><span class="q-badge">Q6</span><span>根据你的经验，我们怎么才能更好地把AI部署到实际业务中？</span><a class="q-anchor" href="#q6" aria-label="复制本段链接">#</a></h2>
+  <p>从这个项目来看，我认为AI落地最重要的一点，是从业务问题和背后多人群的真实需求出发，把技术当作解决手段，而非出发点。<br>很多企业做AI项目时，会先想：“我们能不能接入一个大模型？”<br>但真正应该问的是：“业务中哪个问题最值得被解决？”<br>FDE首先需要具备业务理解能力。只有进入现场，才能知道真实问题是什么。<br>很多时候，业务人员表达的是：“装不满。”<br>但技术人员需要进一步拆解：是不是空间数据不准确？是不是规划效率低？是不是执行流程有问题？<br>第二，需要做好技术和业务之间的翻译。<br>大模型很强，但需要用对地方。像这个案例，我们让大模型负责理解和调度，把专业计算交给专业算法，充分发挥各自的优势。<br>第三，要重视落地过程中的细节。<br>AI项目最后能不能成功，往往取决于这些小问题：工人愿不愿意用？流程是否改变太大？成本是否企业能接受？<br>所以FDE的角色远不止AI开发，其核心价值在于连接业务、技术和用户三者。<br>第四，也是我在这一行越来越看重的一点：AI落地要算清“经济账”。运费按方算、98方保本、每方增收100美元，这些商业机制直接决定了装载优化的价值落点。只有既懂算法、又懂业务账的FDE，才能把技术提升真正翻译成客户可感知的成本节约。这本身也是一种稀缺能力。<br>第五，好的AI落地不是零和博弈，而是做增量。这个项目我的底层商业逻辑，是它让工人、物流公司、货主三方都从“多出来的车次、多出来的方”里受益。把蛋糕做大，比在旧蛋糕里抢份额更有价值，也更能走远。<br>有幸在黑河这样一个边境小城，碰到跨境物流、自贸区这些真实得不能再真实的业务场景；有幸遇到一批不空谈、愿意跟我一起把AI从屏幕里，搬到车间、搬到车门前、搬到一线工人手里的伙伴。所以我一直信一句话：未来真正有价值的AI，一定长在企业的真实流程里，而不是停在Demo上。这也是FDE对我最大的意义，让AI从电脑，走到真实世界里。</p>
+</section>
+      </div>
+
+      <nav class="pager"><a class="pager-link prev" href="no-05.html"><span>上一案例</span><strong>NO.5 从大海捞针到全链路提效</strong></a><a class="pager-link next" href="no-07.html"><span>下一案例</span><strong>NO.7 从个人提效到组织能力</strong></a></nav>
+      <p class="case-back"><a href="../index.html">← 返回案例索引</a></p>
+    </article>
+
+    <aside class="case-aside">
+      <div class="aside-inner">
+        <p class="aside-label">本案例问答</p>
+        <nav class="aside-toc" id="toc"><a href="#q1" data-target="q1">Q1<em>场景与问题</em></a><a href="#q2" data-target="q2">Q2<em>过去做法</em></a><a href="#q3" data-target="q3">Q3<em>方案与步骤</em></a><a href="#q4" data-target="q4">Q4<em>实际效果</em></a><a href="#q5" data-target="q5">Q5<em>挑战与解决</em></a><a href="#q6" data-target="q6">Q6<em>经验建议</em></a></nav>
+        <a class="aside-all" href="../index.html">案例索引</a>
+      </div>
+    </aside>
+  </div>
+</main>
+<div class="mobile-jump">
+  <select id="case-jump" aria-label="跳到其他案例"><option value="no-01.html">NO.1 从师徒带教到AI辅助培训</option><option value="no-02.html">NO.2 从人工审材料到自动化办件</option><option value="no-03.html">NO.3 从案头工作到智能协作</option><option value="no-04.html">NO.4 从人工研判到智能调度</option><option value="no-05.html">NO.5 从大海捞针到全链路提效</option><option value="no-06.html" selected>NO.6 从经验装车到智能规划</option><option value="no-07.html">NO.7 从个人提效到组织能力</option><option value="no-08.html">NO.8 从物料难找到精准定位</option><option value="no-09.html">NO.9 从“表哥表姐”到智能执行</option><option value="no-10.html">NO.10 从人工核对到智能对账</option><option value="no-11.html">NO.11 从文件散乱到随取随用</option><option value="no-12.html">NO.12 从人工盯图到公司级生产</option><option value="no-13.html">NO.13 从纸质流程到数据驱动</option><option value="no-14.html">NO.14 从技术交付到业务自驱</option><option value="no-15.html">NO.15 从经验写稿到稳定量产</option><option value="no-16.html">NO.16 从人工分析到分钟级洞察</option><option value="no-17.html">NO.17 从老师傅报价到AI深度协同</option><option value="no-18.html">NO.18 从纸质台账到AI经营</option><option value="no-19.html">NO.19 从人工排队到审核前置</option><option value="no-20.html">NO.20 从看不清订单到看清经营</option><option value="no-21.html">NO.21 从人工绘图到智能协作</option><option value="no-22.html">NO.22 从库存割裂到业务联动</option><option value="no-23.html">NO.23 从老板报价到长尾承接</option><option value="no-24.html">NO.24 从发货到动销</option></select>
+</div>
+
+<footer class="site-footer">
+  <p>内容来源：Datawhale《FDE案例100》（2026 年 9 月），本站为非官方阅读版，仅供学习交流。</p>
+  <p class="footer-meta">由 <code>build_site.py</code> 从 Markdown 生成 · 托管于 GitHub Pages</p>
+</footer>
+<div class="search-overlay" id="search-overlay" hidden>
+  <div class="search-panel" role="dialog" aria-modal="true" aria-label="全文搜索">
+    <div class="search-field">
+      <span class="search-btn-icon">⌕</span>
+      <input id="search-input" type="search" placeholder="搜索案例、行业、痛点、方案……" autocomplete="off">
+      <kbd>Esc</kbd>
+    </div>
+    <div class="search-hint" id="search-hint">输入关键词，例如「OCR」「财务对账」「知识库」</div>
+    <ul class="search-results" id="search-results"></ul>
+  </div>
+</div>
+<script src="../assets/app.js"></script>
+</body>
+</html>

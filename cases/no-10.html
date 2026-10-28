@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NO.10 从人工核对到智能对账 · FDE 案例 100</title>
+<meta name="description" content="NO.10 从人工核对到智能对账：FDE用AI让线下零售对账又快又准">
+<meta property="og:type" content="website">
+<meta property="og:title" content="NO.10 从人工核对到智能对账 · FDE 案例 100">
+<meta property="og:description" content="NO.10 从人工核对到智能对账：FDE用AI让线下零售对账又快又准">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23b3402b'/%3E%3Ctext x='16' y='22' font-family='Georgia,serif' font-size='15' fill='%23faf7f0' text-anchor='middle'%3EF%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body data-root="../">
+<div class="progress" id="progress"></div>
+<header class="site-header">
+  <a class="brand" href="../index.html">
+    <span class="brand-mark">FDE</span>
+    <span class="brand-text">案例 100</span>
+  </a>
+  <nav class="site-nav"><a class="nav-link is-active" href="../index.html">案例索引</a><a class="nav-link" href="../appendix.html">前言</a><a class="nav-link" href="../all.html">全文</a></nav>
+  <button class="search-btn" id="search-open" type="button" aria-label="搜索全文">
+    <span class="search-btn-icon">⌕</span><span class="search-btn-text">搜索</span><kbd>Ctrl K</kbd>
+  </button>
+</header>
+
+<main class="wrap">
+  <div class="case-layout">
+    <article class="case">
+      <p class="case-kicker">NO.10 · 线下零售</p>
+      <h1 class="case-title">从人工核对到智能对账：FDE用AI让线下零售对账又快又准</h1>
+      
+      <p class="case-speaker">讲述人：Michael ｜ Cherry Studio 合伙人</p>
+      <blockquote class="case-quote">FDE最核心的判断力是看清什么值得做。</blockquote>
+      <div class="case-tags"><span class="tag">线下零售</span><span class="tag">门店经营</span><span class="tag">智能对账</span><span class="tag">OCR</span><span class="tag">视觉AI</span></div>
+
+      <section class="case-intro">
+        <h2 class="section-label">案例简介</h2>
+        <p class="case-lead">对于主要依赖线下门店经营的零售企业来说，门店与商场之间的对账是一项不起眼、却直接关系收入的工作。过去店员或店长要拿着纸质单据，在商场和自有收银系统之间逐项核对，一个周期往往要消耗一两个人天，还容易出错、反复确认。本案例中，Michael先找到了离业务目标、离收入最近的问题，用OCR加视觉能力把原本需要人工肉眼完成的第一轮核对自动化，按周期定时运行，让员工直接处理初步核对后的结果和真正需要人工判断的差异。落地后，对账时间从一个周期的一两个人天降到几个小时，原来因为人工嫌麻烦而被总部允许忽略的部分差异，也开始被识别出来，为企业带来额外的收入价值。</p>
+        <h2 class="section-label">适用人群</h2>
+        <ul class="audience"><li>线下零售行业从业者</li><li>财务对账、门店经营及业务自动化团队</li><li>FDE、AI产品经理、企业AI应用负责人</li></ul>
+      </section>
+
+      <div class="qa-list">
+        <section class="qa" id="q1">
+  <h2 class="q-title"><span class="q-badge">Q1</span><span>作为FDE，你应用AI的具体场景是什么？在这个场景下遇到的具体问题长什么样？</span><a class="q-anchor" href="#q1" aria-label="复制本段链接">#</a></h2>
+  <p>我一直觉得，FDE真正有价值的地方，在于找到一个和企业业务目标足够近的问题。能不能用AI做出一个东西，反而是次要的。<br>这个案例就是这样。客户是一家以线下零售为主的消费品企业，年营收规模达到几十亿元，门店主要开在百货公司和商业综合体里。它的资金结算链路比较特殊：门店自己的收银系统会产生一套数据，商场也会有一套结算数据，最终资金经过商场结算给企业，所以每个结算周期，都需要把两边的数据和单据重新核对一遍。<br>最开始客户找到我们的时候，提出的其实就是一个非常朴素的问题：对账太费人工了。<br>这件事情听起来很标准，甚至有点“不值得用AI”。但我后来发现，恰恰是这种事情值得仔细看。<br>过去店员或者店长要拿着纸质单据或单据转成的扫描件/图片，从不同系统里把数据拉出来逐项核对。整个过程基本是人工、肉眼完成。如果发现对不上，还要双方重新核对，改完之后可能还会再出现新的差异，于是不断来回拉扯。一个周期下来，可能就要花掉一两个人天。<br>这背后其实有三层问题。<br>第一层是业务问题。对账做得不够彻底，意味着有些本来应该收回来的钱可能被遗漏了。<br>第二层是流程问题。真正承担这项工作的往往是店员或者店长，而他们同时还背着销售指标。对账占用的时间越多，能够投入销售和门店经营的时间就越少。<br>第三层是信息问题。两边的数据并没有天然打通，纸质单据又增加了人工核对的成本，所以人只能不断在不同信息之间做比对。<br>真正让我觉得这个问题值得做的，是我们后来发现：它除了省人工，还可能直接影响收入。<br>过去总部甚至会给门店设一个“容忍区间”，因为大家都知道人工对账太麻烦，如果差异在一定比例以内，就干脆不再追了。可是现在，如果机器能够把这些差异找出来，那么原来被忽略的钱，就有机会重新被识别出来。这个价值就从“节省几个人天”，变成了实实在在的收入增益。<br>所以从FDE的角度看，我最终优先选择的是业务价值最容易被验证的场景，把“AI最酷的场景”往后放。</p>
+</section><section class="qa" id="q2">
+  <h2 class="q-title"><span class="q-badge">Q2</span><span>在你参与之前，这个问题过去是怎么解决的？</span><a class="q-anchor" href="#q2" aria-label="复制本段链接">#</a></h2>
+  <p>原来的解决方案逻辑非常直接：拉多个系统数据、看总额、看分项、针对差异找原因。对于一个店或者少量门店来说，人完全可以完成。<br>但问题是，业务规模扩大以后，人工方式的边际成本越来越高。<br>一个门店可能还能接受一两个小时甚至一天的核对，但当门店数量增加以后，每个周期都要重复做同样的事情。更麻烦的是，人工除了“慢”，还会产生连续的返工：发现差异、重新确认、修改，再核对；如果员工觉得某些差异不值得继续追，就可能直接放弃了。<br>所以，过去的方法本身并没有错，问题在于业务复杂度超过了人工方式的承载能力。<br>这也是为什么我后来越来越觉得，FDE做AI落地的时候，不能上来就说“原来的流程太落后了，我们用AI替代”。真正应该问的是：原来的方式为什么能够运行？它在哪个节点开始失去效率？AI究竟应该接管哪一部分？<br>在这个案例里，我们没有试图把整个对账流程全部AI化，而是先接管最标准、最重复、最适合自动化的那一轮核对，把人从大量机械比对中释放出来。<br>这也是为什么员工最后对这个方案的接受度比较高。在他们看来，这更像是“有人已经帮我做完第一轮对账了，我只需要看结果和处理真正的差异”，很少被当成“又一个需要重新学习的系统”。</p>
+</section><section class="qa" id="q3">
+  <h2 class="q-title"><span class="q-badge">Q3</span><span>后来你使用AI解决这个问题的整体思路和关键步骤是什么？</span><a class="q-anchor" href="#q3" aria-label="复制本段链接">#</a></h2>
+  <p>这个案例真正让我觉得有价值的，在于我们怎么选这个问题，以及怎么控制交付范围，OCR或者视觉本身反而排在后面。<br>第一步，是从客户提出的多个需求里排优先级。<br>客户当时并不只有对账一个需求，还提出过自动化客服、竞品对比等方向。<br>如果单纯从“AI能做什么”来看，这些事情都可以做。但站在FDE角度，我会先问一个问题：哪个事情能够最快形成业务上的正反馈？<br>客服可能同时涉及效率和新增商机，需要积累比较长的数据周期，才能证明商机到底增加了多少；竞品分析则涉及后续多种运营策略，最终业务结果并不容易在短时间内验证。<br>相比之下，对账的价值非常直接：少花多少人工，可以很快看到；少漏多少钱，也可以直接计算。<br>所以第一个判断，重点是哪个任务最有可能最快得到正反馈，技术上是否最先进反而次要。<br>第二步，是把AI放在真正适合它的位置。<br>我们最后采用的是OCR加视觉的方式，对纸质/图像单据和相关信息进行识别、比对，再通过自动化工作流按照周期定时运行。简单说，就是让AI完成大量重复性的第一轮核对，把已经能够确认的结果先筛出来，再让人处理真正需要判断的部分。<br>这个方案其实并没有什么特别“炫”的技术。<br>但我反而认为这很典型：FDE要做的，是找到一个足够简单、成本足够低、又能真正解决业务问题的方案，而未必是最复杂的技术。<br>第三步，是从一开始就考虑规模化，不只停留在Demo。<br>当时我们只落了上海几个门店，数量还是个位数。但客户整体门店规模比较大，所以我在方案设计时就已经考虑了后续扩展的问题。<br>几个门店每个周期跑一次，和几百、上千个门店在接近的时间窗口里同时运行，对系统稳定性和AI出错后的冗余要求完全不一样。<br>所以我们一开始就把它拆成两个阶段。<br>第一阶段尽可能轻量，甚至在CherryStudio加本地电脑的情况下就可以完成；第二阶段如果真正扩展到更大规模，就需要在后端数据和冗余机制上增加更多能力。<br>我比较看重这一点：轻量化不等于没有规划。可以先用最小成本验证价值，但从Day One开始，就应该知道如果验证成功，下一步怎么走。<br>第四步，是尽量不给一线员工增加额外负担。<br>这一点其实很容易被技术团队忽略。一个新的AI工具，如果需要员工额外录入数据、重新学习流程、增加操作步骤，那么员工看到的首先是“我又多了一件事”。<br>所以我们尽量让AI出现在原有流程里面，不让员工重新建立一套流程。最终员工拿到的是已经经过第一轮处理的结果，无需再维护一个自己的系统。<br>我觉得这也是AI真正落地时一个很重要的细节：不要让用户先看到自己的投入，再等待未来的收益；尽量让他第一时间感受到收益。</p>
+</section><section class="qa" id="q4">
+  <h2 class="q-title"><span class="q-badge">Q4</span><span>相比传统方式，使用AI后的实际效果如何？</span><a class="q-anchor" href="#q4" aria-label="复制本段链接">#</a></h2>
+  <p>最直接的变化，是时间从“人天”变成了“小时”。<br>过去一个周期可能要花一两个人天，甚至因为反复核对而把周期拉得更长。现在整个过程压缩到几个小时，员工只需要处理真正需要人工判断的部分。<br>但如果只把它总结成“省人工”，我觉得还是低估了这个项目。<br>真正让我觉得意外的是，AI把原来被人工流程掩盖的问题暴露了出来。在实际数据里，有的门店差异在一两个百分点，有的能达到两三个百分点。这里面既有少收，也有多收，最终需要看净差异。但对于一家线下零售企业来说，即使只有一两个百分点，如果落到纯利层面，也已经是一个非常大的数字。<br>所以这个项目给我的一个很大启发是：AI的价值有时候在于，让企业终于有能力把过去因为成本太高而放弃的事情重新做起来。现在核对成本降下来了，那部分被放弃的价值就有机会重新捡回来。<br>目前我们落地的还是上海部分门店，未来还有进一步扩大范围的空间。</p>
+</section><section class="qa" id="q5">
+  <h2 class="q-title"><span class="q-badge">Q5</span><span>在部署AI过程中，是否遇到了新问题或挑战？你是怎么解决的？</span><a class="q-anchor" href="#q5" aria-label="复制本段链接">#</a></h2>
+  <p>这个案例本身比较顺，但我们其实踩过不少坑。现在回头看，我觉得主要有三个挑战。<br>第一个挑战，是高估AI能力，低估真实行业的难度。<br>我们之前做过一个国内电商横向价格对比的案例。<br>当时我知道这件事情不容易，因为市场上已经有专门做电商比价的公司，人家背后有数据、接口，还有各种数据来源和业务门道。但当时还是有一个判断：我们觉得AI应该能够解决其中百分之七八十的问题。<br>真正开始做之后才发现，现实比想象复杂得多。<br>国内电商平台的风控和反风控一直在博弈，平台本身对快速价格查询、模拟人为操作等行为有很强的限制。即使找到一个方案，也可能很快被平台策略堵掉。最后导致交付周期拉长，能覆盖的场景也不断缩小。<br>这件事情让我意识到，AI能力和真实业务难关之间，必须做匹配。不能因为模型和Agent现在很强，就默认现实世界的问题都能解决。<br>本质上还是行业认知不够。<br>如果一个行业里已经有公司专门靠某个问题生存，那就应该先认真研究：它到底解决了什么难点？它掌握了哪些信息差？为什么这个事情值得一家公司的长期投入？<br>第二个挑战，是需求调研不够深，导致后面不断返工。<br>另一个案例是学校批改作业和智能推题。<br>这个需求听起来非常顺：先批改，再给分，再分析，然后根据学生情况推题；题目还来自学校自己的题库。<br>但真正拆开以后，问题非常复杂。<br>比如准确率到底要多少？批改时效要求是什么？哪些科目？批改频率多高？题库需要结构化到什么程度？推题有什么规则？学生一道难题做错之后，是应该降低难度，还是继续围绕同一个知识点给他更难的题？人工到底在哪个环节介入？<br>这些问题如果前期没有问清楚，后面就会不断出现需求变化。<br>以前软件工程时代，这叫产品经理需求没定义清楚，研发不断返工；到了AI时代，本质没有变，只不过后面的“返工成本”还可能直接表现成大量Token消耗和交付成本。<br>所以现在我们做FDE，会比以前更谨慎。技术调研要认真做，方案调研要认真做，业务调研也要认真做。<br>第三个挑战，是组织和责任边界没有提前对齐。<br>AI项目很容易被理解成“老板想要、FDE来做、一线员工来用”。但实际上老板、中层、一线员工关注的东西完全不一样。如果前期没有把每个层级的目标、预期、能力边界和责任讲清楚，最后很容易出现“做得不好就是FDE的问题”。<br>所以我现在越来越强调一件事情：不仅要和老板对齐，还要和涉及项目的不同层级分别对齐。<br>谁负责什么，谁投入什么，做到什么程度算成功，AI出问题之后谁判断、谁处理，都应该尽可能在前面讲清楚。</p>
+</section><section class="qa" id="q6">
+  <h2 class="q-title"><span class="q-badge">Q6</span><span>根据你的经验，我们怎么才能更好地把AI部署到实际业务中？</span><a class="q-anchor" href="#q6" aria-label="复制本段链接">#</a></h2>
+  <p>如果让我把这次经历总结成几个最基本的原则，我反而不会先讲模型、Agent或者工作流。我会先讲价值、优先级和信任。<br>第一，第一单一定要选对。<br>一个企业可能同时给你十个需求，但第一个项目不能只看哪个最有意思，需要综合判断：业务价值是不是足够显性、正反馈是不是来得足够快、涉及的人是不是足够少、业务流程是不是足够清晰、用户需要投入多少、技术成本是不是可控、最终价值能不能算出来。<br>没有所谓的“六边形完美任务”，最终一定是权衡。<br>对账这个案例之所以适合作为第一步，就是因为它在这些维度上比较平衡：涉及的人少，业务流程相对清晰，价值可以计算，AI成本也不高，而且员工容易接受。<br>第二，第一版不要追求完美，要先跑出一个正循环。<br>我比较建议FDE做项目的时候，第一版先解决一个边界清晰的问题。做到客户认可，做到有人真正使用，做到价值能够被看见。<br>当第一个正循环跑起来之后，信任就建立了。第二个需求的容忍度会更高，再继续扩大，再继续扩大，最后形成一个持续的正循环。这比一开始就承诺一个“全自动、全覆盖、一次解决所有问题”的方案，要健康得多。<br>第三，DayOne就要想清楚交付边界。<br>尤其面对中大型企业，不能做到一半才告诉客户：“这个还需要你买服务器”“这个还需要增加人”“这个还要改一套流程”。<br>客户的资源和信任都是真实存在的。所以在第一天设计方案的时候，就应该尽可能把技术路线、资源投入、后续扩展路径和可能的边界讲清楚。<br>第四，不要把AI落地简单理解成“替代人”<br>这是我自己比较坚持的一点。如果AI把一个岗位里百分之七八十的事情做掉，很容易让企业产生一个冲动：既然效率提高了，那是不是可以直接裁人？<br>但我认为，这很容易把AI项目变成企业和员工之间的对抗。更好的方式，是把省下来的人工带宽转移到更高价值的事情上。比如客服人员不一定继续只做客服，可以去做用户研究、销售或者其他与客户交互相关的工作；投流团队不只追求“少几个人”，更看重人均犯错率下降、人均ROI提升。<br>这样AI带来的，是组织的业务目标升级，降本反而退居其次。<br>第五，FDE最核心的能力，最后还是“懂业务”<br>AI真正能够被快速放大的，是后端交付能力；但最难复制的，还是前端的行业认知、需求洞察和组织理解。<br>所以未来FDE可能会出现分层：有一小批人特别懂行业、懂组织、懂咨询，也懂AI交付；更多的人则可以在标准化、Agent友好的任务上，通过成熟的工具完成稳定交付。<br>但不管是哪一层，最基本的问题都不会变。<br>我会要求团队一直回答这几个问题：客户真正关心什么？他以前是怎么做的？现在我们做完之后，他是怎么做的？我们到底给他创造了什么价值？和原来的方案相比，我们有什么优点，又有什么缺点？<br>我觉得这其实就是FDE最基本的“商业101”。会做就是会做，不会做就是不会做；懂这个行业就是懂，不懂就是不懂。不要因为AI和FDE现在很热，就把自己的能力边界包装得无限大。<br>真正好的FDE，在于知道什么值得做、什么现在能做，以及怎么把能做的事情做到让客户真正看到价值。<br>当第一个小胜仗跑出来，客户看到了价值，员工愿意使用，业务愿意继续投入，AI才真正从一个技术能力，变成了企业业务的一部分。</p>
+</section>
+      </div>
+
+      <nav class="pager"><a class="pager-link prev" href="no-09.html"><span>上一案例</span><strong>NO.9 从“表哥表姐”到智能执行</strong></a><a class="pager-link next" href="no-11.html"><span>下一案例</span><strong>NO.11 从文件散乱到随取随用</strong></a></nav>
+      <p class="case-back"><a href="../index.html">← 返回案例索引</a></p>
+    </article>
+
+    <aside class="case-aside">
+      <div class="aside-inner">
+        <p class="aside-label">本案例问答</p>
+        <nav class="aside-toc" id="toc"><a href="#q1" data-target="q1">Q1<em>场景与问题</em></a><a href="#q2" data-target="q2">Q2<em>过去做法</em></a><a href="#q3" data-target="q3">Q3<em>方案与步骤</em></a><a href="#q4" data-target="q4">Q4<em>实际效果</em></a><a href="#q5" data-target="q5">Q5<em>挑战与解决</em></a><a href="#q6" data-target="q6">Q6<em>经验建议</em></a></nav>
+        <a class="aside-all" href="../index.html">案例索引</a>
+      </div>
+    </aside>
+  </div>
+</main>
+<div class="mobile-jump">
+  <select id="case-jump" aria-label="跳到其他案例"><option value="no-01.html">NO.1 从师徒带教到AI辅助培训</option><option value="no-02.html">NO.2 从人工审材料到自动化办件</option><option value="no-03.html">NO.3 从案头工作到智能协作</option><option value="no-04.html">NO.4 从人工研判到智能调度</option><option value="no-05.html">NO.5 从大海捞针到全链路提效</option><option value="no-06.html">NO.6 从经验装车到智能规划</option><option value="no-07.html">NO.7 从个人提效到组织能力</option><option value="no-08.html">NO.8 从物料难找到精准定位</option><option value="no-09.html">NO.9 从“表哥表姐”到智能执行</option><option value="no-10.html" selected>NO.10 从人工核对到智能对账</option><option value="no-11.html">NO.11 从文件散乱到随取随用</option><option value="no-12.html">NO.12 从人工盯图到公司级生产</option><option value="no-13.html">NO.13 从纸质流程到数据驱动</option><option value="no-14.html">NO.14 从技术交付到业务自驱</option><option value="no-15.html">NO.15 从经验写稿到稳定量产</option><option value="no-16.html">NO.16 从人工分析到分钟级洞察</option><option value="no-17.html">NO.17 从老师傅报价到AI深度协同</option><option value="no-18.html">NO.18 从纸质台账到AI经营</option><option value="no-19.html">NO.19 从人工排队到审核前置</option><option value="no-20.html">NO.20 从看不清订单到看清经营</option><option value="no-21.html">NO.21 从人工绘图到智能协作</option><option value="no-22.html">NO.22 从库存割裂到业务联动</option><option value="no-23.html">NO.23 从老板报价到长尾承接</option><option value="no-24.html">NO.24 从发货到动销</option></select>
+</div>
+
+<footer class="site-footer">
+  <p>内容来源：Datawhale《FDE案例100》（2026 年 9 月），本站为非官方阅读版，仅供学习交流。</p>
+  <p class="footer-meta">由 <code>build_site.py</code> 从 Markdown 生成 · 托管于 GitHub Pages</p>
+</footer>
+<div class="search-overlay" id="search-overlay" hidden>
+  <div class="search-panel" role="dialog" aria-modal="true" aria-label="全文搜索">
+    <div class="search-field">
+      <span class="search-btn-icon">⌕</span>
+      <input id="search-input" type="search" placeholder="搜索案例、行业、痛点、方案……" autocomplete="off">
+      <kbd>Esc</kbd>
+    </div>
+    <div class="search-hint" id="search-hint">输入关键词，例如「OCR」「财务对账」「知识库」</div>
+    <ul class="search-results" id="search-results"></ul>
+  </div>
+</div>
+<script src="../assets/app.js"></script>
+</body>
+</html>

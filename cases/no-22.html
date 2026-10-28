@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NO.22 从库存割裂到业务联动 · FDE 案例 100</title>
+<meta name="description" content="NO.22 从库存割裂到业务联动：FDE用AI打通跨境电商的库存、补货与广告决策">
+<meta property="og:type" content="website">
+<meta property="og:title" content="NO.22 从库存割裂到业务联动 · FDE 案例 100">
+<meta property="og:description" content="NO.22 从库存割裂到业务联动：FDE用AI打通跨境电商的库存、补货与广告决策">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23b3402b'/%3E%3Ctext x='16' y='22' font-family='Georgia,serif' font-size='15' fill='%23faf7f0' text-anchor='middle'%3EF%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body data-root="../">
+<div class="progress" id="progress"></div>
+<header class="site-header">
+  <a class="brand" href="../index.html">
+    <span class="brand-mark">FDE</span>
+    <span class="brand-text">案例 100</span>
+  </a>
+  <nav class="site-nav"><a class="nav-link is-active" href="../index.html">案例索引</a><a class="nav-link" href="../appendix.html">前言</a><a class="nav-link" href="../all.html">全文</a></nav>
+  <button class="search-btn" id="search-open" type="button" aria-label="搜索全文">
+    <span class="search-btn-icon">⌕</span><span class="search-btn-text">搜索</span><kbd>Ctrl K</kbd>
+  </button>
+</header>
+
+<main class="wrap">
+  <div class="case-layout">
+    <article class="case">
+      <p class="case-kicker">NO.22 · 跨境电商</p>
+      <h1 class="case-title">从库存割裂到业务联动：FDE用AI打通跨境电商的库存、补货与广告决策</h1>
+      
+      <p class="case-speaker">讲述人：张新卓 ｜ Pathwyze杭州拓径咨询 Founder</p>
+      <blockquote class="case-quote">FDE不是为了AI而AI，而是用合适的方式为企业解决具体问题</blockquote>
+      <div class="case-tags"><span class="tag">跨境电商</span><span class="tag">服装行业</span><span class="tag">库存管理</span><span class="tag">补货预警</span></div>
+
+      <section class="case-intro">
+        <h2 class="section-label">案例简介</h2>
+        <p class="case-lead">跨境电商团队面对的库存问题，往往贯穿订单、物流、补货和广告多个环节。订单来自多个电商平台，库存沉淀在聚合SaaS里，新品和业务信息又在飞书里，工厂发货、物流追踪、补货和广告投放各自有一套流程。SKU数量增加后，靠人工看图、Excel计算和跨平台搬运数据的做法，会越来越吃力。本案例中，张新卓从客户一句“把两个系统打通”开始，通过录屏演示和业务梳理，逐步看清了库存、补货和广告之间的联动关系。他先打通数据，再让AI处理物流照片和回填，接着做库存补货预警，最后把库存和广告投放联动起来。原来每天需要人工处理4～5小时的图片和数据工作被压缩到1小时以内，原来2～3小时的人工补货流程也变成了AI生成、人工确认。</p>
+        <h2 class="section-label">适用人群</h2>
+        <ul class="audience"><li>跨境电商及服装行业从业者</li><li>库存、供应链、广告投放相关团队</li><li>FDE、AI产品经理、企业AI应用负责人</li></ul>
+      </section>
+
+      <div class="qa-list">
+        <section class="qa" id="q1">
+  <h2 class="q-title"><span class="q-badge">Q1</span><span>作为FDE，你应用AI的具体场景是什么？在这个场景下遇到的具体问题长什么样？</span><a class="q-anchor" href="#q1" aria-label="复制本段链接">#</a></h2>
+  <p>这个案例表面上看是一起“系统集成”，但真正要解决的，是跨境电商业务链路上的信息割裂。<br>客户是一个十几人的跨境电商团队，主要做东南亚市场，主营服装。服装行业每个颜色、每个尺码都会形成一个独立SKU，所以SKU特别多。按照访谈中的估算，他们每个季度新增500～800个SKU，全年SKU大概在2500～3000个。对于一个10～15人的团队来说，这样的SKU数量和平台复杂度已经不低了。<br>他们过去的库存数据集中在一个多平台聚合SaaS里，各个电商平台的库存会汇总进去，但新品开发、部分业务信息又在飞书里，两边没有打通。客户最开始找到我时，说得非常简单，能不能把这个SaaS和飞书打通。<br>我没有急着把它当成一个API集成项目。如果只是集成，技术上没有太大障碍，真正要问的是，打通以后谁用，用来解决什么业务问题。<br>所以我们没有急着开发，连续开了几次会，让客户录屏演示他们实际怎么工作。也正是在这个过程中，我们才逐渐看到，库存只是整条链路上的一个环节。<br>工厂发货时没有用RFID或者扫码枪，物流环节仍然靠拍照、识图，再由员工人工看照片、填写数据，追踪物流单号和进展。数据已经产生了，人还在充当那个“数据搬运工”。<br>库存管理也一样。过去他们通过Excel计算补货，工作人员要从聚合SaaS里把数据扒下来，填进自己的计算表，按自己的一套公式计算补货，再把结果填进另一个模板，最后生成PDF发给供应商。<br>广告的问题更直接。他们每天在Google、TikTok等平台投广告，广告是持续烧钱的。如果某个SKU库存已经很低，广告还在继续跑，客户继续下单，企业却发不出货，广告费用还在继续消耗。<br>所以我最后看到的，是一条业务链。订单和库存数据→物流数据→补货决策→供应商下单→广告投放。<br>真正值得解决的，是让这些原本割裂的环节能够互相感知。</p>
+</section><section class="qa" id="q2">
+  <h2 class="q-title"><span class="q-badge">Q2</span><span>在你参与之前，这个问题过去是怎么解决的？</span><a class="q-anchor" href="#q2" aria-label="复制本段链接">#</a></h2>
+  <p>过去这家团队的工具不算少，Excel、聚合SaaS、飞书都在转。最累的，是那个在各个工具之间来回搬数据的人。<br>十几人的团队，业务规模还不大的时候，一个人来回搬数据也应付得过来，成本也不高。他们补货也有一套自己的公式，工作人员看SKU过去三个月的销售，结合自己的预测逻辑，就能算出下一次该补什么颜色、什么尺码、补多少。这套逻辑是成立的，问题在于它被埋进了一条需要人工反复搬数据的流程里。<br>所以我们没有重新发明一套库存算法。客户原来的补货逻辑可以继续保留，我们要做的，只是把其中机械、重复、跨系统的动作交给机器。<br>这个案例的瓶颈，在数据和人的关系上。<br>工作人员先把数据从一个系统里扒下来，填进Excel；Excel算完，又誊到另一个模板；物流照片到了，再一张张人工看；广告又在另外的平台上跑。<br>每件事单独看都不重，可一旦连成一串，就是一条非常长的人工链路。<br>SKU还在涨。几十个、几百个的时候，人盯得过来；涨到几千个，人一天的时间就大量耗在“看、抄、填、核对”上。规模越大，人越被钉在这些搬运动作上。<br>我们的改造，是把这条人工链路拆开，看清哪些环节必须由人做，哪些环节机器做得更好，再把机器擅长的部分接上。工具没换，人不用再当那个中间连接件。</p>
+</section><section class="qa" id="q3">
+  <h2 class="q-title"><span class="q-badge">Q3</span><span>后来你使用AI解决这个问题的整体思路和关键步骤是什么？</span><a class="q-anchor" href="#q3" aria-label="复制本段链接">#</a></h2>
+  <p>这个案例最有意思的地方，是我们一开始根本没有一个完整需求内容。<br>客户最初只是说，我想把两个平台打通。<br>如果按照传统项目交付的方式，我可能就直接拿需求、评估接口、开始开发。但FDE的工作方式不太一样，我需要先判断客户真正想解决什么。<br>我们大概花了一周，进行了三四轮沟通，把客户的场景一点点收集起来，再回来和团队讨论，哪些地方适合自动化，哪些地方可以接Agent，哪些地方其实不需要AI。<br>第一步，先把数据打通。<br>我们做的第一件事，是先把数据基础搭起来。<br>客户原来的核心数据在聚合SaaS里，业务管理又在飞书里，所以我们先想办法把数据同步到飞书，让他们可以直接在熟悉的业务环境里看到实时库存。<br>这个过程中，碰到了整个项目里最难啃的技术问题。对方SaaS的API开放程度很低，Key的机制也满足不了客户多个团队同时共享数据的需求。最后我们增加了一层开源的云端数据库（Supabase）做中转，让数据先进入这个中间库，再从这里同步到飞书。<br>这也正是FDE做事的方式，业务目标不变，实现路径可以不断调整。<br>第二步，让AI处理物流照片。<br>数据打通之后，一个非常明显的人工瓶颈冒了出来，物流照片。以前工厂拍完照，上传到多维表，接下来全靠员工一张张看图、回填。<br>这个流程其实非常适合AI。<br>所以我们让Agent参与“识图+回填”，同时保留人工确认。AI负责把原来最耗时间的第一轮识别和数据录入做掉，人只需要最后检查。这一点我很看重，AI放在这里，是因为这段工作本来就适合它。<br>第三步，让AI照着原来的公式算补货。<br>数据打通之后，原来那套靠人扒数据、填表、计算的补货流程，就有了新的基础。<br>现在数据可以直接进入业务流程，Agent按照原来的补货规则进行计算，把需要补货的SKU筛出来，同时给出预计的补货周期和数量。<br>人工的角色从“计算员”变成了“审核员”。如果结果没问题，确认之后就可以直接生成PDF订单发给供应商。<br>第四步，再把库存和广告联系起来。<br>做到这里，客户又自然产生了下一层需求。既然现在已经知道库存了，那是不是可以让库存反过来影响广告？<br>于是我们进一步把库存、订单以及广告投放情况结合起来。<br>当某个SKU库存下降到一定程度时，Agent可以判断对应广告是否还应该继续投。如果库存不足，就先把广告额度调低，甚至暂停广告，避免一边烧广告、一边发不出货。<br>所以整个过程，更像是一步步往前推，打通数据，看见新问题，解决新问题，再产生新的业务可能性。<br>客户一开始自己也没有把这些需求全部想清楚。很多时候，他只是知道“我现在很痛”，但不知道技术应该怎么解决。FDE要做的，就是把这种结果导向的需求，拆成可以落地的业务和技术问题。</p>
+</section><section class="qa" id="q4">
+  <h2 class="q-title"><span class="q-badge">Q4</span><span>相比传统方式，使用AI后的实际效果如何？</span><a class="q-anchor" href="#q4" aria-label="复制本段链接">#</a></h2>
+  <p>这个案例有一个特别的地方，交付结束后，客户把我们的团队权限移除了，后续的营收、广告成本和利润数据，我们没有拿到完整的。但时间效率上的变化是比较明确的。<br>以前处理物流照片和数据，一个人每天大概需要花4～5个小时去看图片、写数据。现在AI先完成识别和回填，人只需要做最后的核对，整体时间被压缩到了1小时以内。<br>补货也是类似。以前从不同系统扒数据、对数据、填Excel、计算，再整理成订单，至少需要2～3个小时。现在Agent把结果算出来之后，工作人员主要负责看一眼、验证一下，确认之后就可以生成订单。<br>所以我更愿意把这个项目的价值概括成三个变化。<br>第一，从“人工搬数据”变成“数据自动流动”；第二，从“人工计算”变成“AI计算、人工确认”；第三，从“库存、补货、广告各自决策”变成“库存开始影响广告决策”。<br>尤其第三点，我认为比单纯节省几个小时更重要。<br>以前库存是一个结果，广告是另一个动作，两边其实是割裂的。现在库存变化可以直接影响广告投放，业务开始从单点自动化走向了流程之间的联动。<br>当然，这个案例的效果跟踪还有不足。</p>
+</section><section class="qa" id="q5">
+  <h2 class="q-title"><span class="q-badge">Q5</span><span>在部署AI过程中，是否遇到了新问题或挑战？你是怎么解决的？</span><a class="q-anchor" href="#q5" aria-label="复制本段链接">#</a></h2>
+  <p>这个项目真正难的地方，其实不在Agent怎么写。最难的是两件事，需求，以及现实世界里那些“不好用的系统”。<br>第一个挑战，客户说出来的需求，不一定是真正需求。<br>客户一开始说的是“帮我把两个系统打通”。但如果我们就照着这个需求做，可能最后只是交付了一个API接口，而没有解决他真正的问题。<br>所以我们反复让客户演示工作流程，甚至让他录屏。只有把“他每天到底怎么工作”看清楚以后，我们才发现后面还有照片处理、补货、供应商下单、广告投放等一系列问题。<br>这件事让我慢慢相信，FDE很重要的一个角色其实是“翻译”。<br>客户说的是业务语言，技术人员听到的是技术语言，中间需要有人把两者转换起来。<br>我自己在团队里其实就比较偏这个Echo的角色，前期咨询、快速做演示、做技术选型，再把客户说的话整理成技术人员可以执行的需求。<br>甚至我当时在和技术团队开会之前，会先让AI帮我把客户的需求重新梳理一遍，再拿去跟技术人员沟通。这本身就是一种AI优先的工作方式，AI先帮助我提高自己的理解和表达效率，项目本身仍然由我来推进。<br>第二个挑战，API能不能用，和“有API”完全是两回事。<br>一开始我们想得很简单，有API，就可以接。<br>真正做起来以后才发现，SaaS方提供的API虽然能用，但Key有失效机制，一个Key也不能被多个团队同时使用。如果A团队刷新Key，B团队原来的Key就会失效，而客户除了我们之外，实际有多个团队需要共享这个key去拉数据。<br>最后我们在中间加了一层数据中转，把数据先引出来，再同步回飞书。<br>这件事让我印象很深，它说明了一个问题，现实世界里的AI落地，很多时候卡在模型之外，企业原有系统的开放程度、数据结构和接口限制，往往才是真正的门槛。AI本身可能已经能做了，但数据根本拿不出来，还是落不了地。<br>第三个挑战，先判断这个问题到底需不需要AI。<br>我们一开始考虑过Agent，但会先判断，看到一个需求，到底值不值得上Agent。<br>一些非常确定、规则非常死的任务，其实写一个脚本、跑一个定时任务就够了。只有当任务开始涉及语义理解、跨系统判断，传统脚本比较难覆盖的时候，才需要引入Agent。<br>所以做方案选择时，我会先问，这个问题到底需不需要AI。<br>能用简单自动化解决的，就不要为了追热点强行用Agent；真正需要理解、判断和跨流程协作的部分，再把Agent放进去。</p>
+</section><section class="qa" id="q6">
+  <h2 class="q-title"><span class="q-badge">Q6</span><span>根据你的经验，我们怎么才能更好地把AI部署到实际业务中？</span><a class="q-anchor" href="#q6" aria-label="复制本段链接">#</a></h2>
+  <p>做这个行业越久，我越确信，FDE真正的壁垒并不在“会不会搭一个Agent”。<br>因为现在代码、自动化、Agent这些东西都更容易获得了，技术本身在变便宜，真正值钱的，是你能否理解业务、判断需求，以及知道什么方案真正适合这个客户。<br>我自己总结下来，有几个比较重要的经验。<br>第一，先解决业务问题，再决定用什么AI。<br>客户告诉你的往往是一个结果，“我希望库存不要断”，“我希望补货不要这么麻烦”，“我希望广告不要浪费钱”。<br>但他不一定知道应该用Agent、脚本、自动化还是一个表格解决。<br>FDE的价值，是先把客户要的结果拆开，看清它背后对应哪条业务链路，再判断技术该插在哪一段。<br>第二，不要把“需求不明确”理解成客户不知道自己要什么。<br>其实客户通常知道自己想要什么，他们只是不会用技术语言描述。<br>这个案例里，客户知道自己想把库存管理做好，也知道自己希望减少人工操作，但他不知道API怎么接、不知道哪些流程适合自动化，也不知道库存和广告其实可以联动。<br>所以FDE的工作，是把客户已经存在、却一直没被清楚说出来的需求，落成可以执行的技术方案。<br>第三，AI落地一定要保留人在关键节点上的判断。<br>这个案例里，我们没有追求100%无人化。图片识别之后，保留人工核对；补货计算之后，人工确认；广告调整也是基于库存情况做业务判断。<br>我认为这是比较现实的AI落地方式，AI负责处理大量重复工作，人负责最终判断。（Humanintheloop)尤其在企业场景里，真正有价值的，是把人的时间从低价值操作中释放出来，让这些时间流向更需要人的判断力的地方。<br>第四，FDE一定要沉淀行业方法论。<br>这一点，是我这两年体会特别深的地方。<br>如果今天做一个电商客户，明天做一个制造业客户，后天又做一个完全不同的行业，每次都从零开始理解业务，那么交付成本会非常高。<br>但如果你长期深耕一个行业，很多东西就可以复用。<br>比如表格应该怎么设计、业务流程在哪几个环节最容易出问题、Agent应该插在哪里、客户通常会有哪些需求，这些经验都会逐渐沉淀下来。<br>我认为真正可持续的FDE，是找到自己最擅长的行业和场景，把一个行业反复做深。<br>第五，交付之后，效果归因也是FDE工作的一部分。<br>这个案例最大的遗憾，就是我们当时交付完以后，没有把后续效果完整追踪下来。主要是我们以往的合作模式也是偏向外包的方式，对于效果的追踪没有那么重视。<br>交付之后，只有客户在使用过程中遇到问题会回来找我们，但我们没法系统地记录和监控到底节省了多少时间、减少了多少成本、对营收和利润产生了多少影响。<br>后来我们也意识到，这其实应该成为FDE服务闭环的一部分，交付、使用、反馈、迭代、效果归因，再进入下一轮优化。团队后来也开始探索更系统的回访和数据收集方式。<br>所以如果让我重新做一遍这个项目，我可能会在一开始就设计好一套“效果基线”。<br>项目上线前，记录人工处理需要多少时间；上线后，再持续记录需要多少时间；补货、广告、订单等关键环节，也尽量找到可以量化的指标。<br>这样我们最终交付的，就既是一个“能跑的AI”，也是一套能够证明自己到底创造了多少业务价值的解决方案。<br>这也是我理解的FDE，站到业务现场，和企业一起，把一个模糊的问题，逐渐变成一个可以运行、可以使用、可以持续产生价值的东西。</p>
+</section>
+      </div>
+
+      <nav class="pager"><a class="pager-link prev" href="no-21.html"><span>上一案例</span><strong>NO.21 从人工绘图到智能协作</strong></a><a class="pager-link next" href="no-23.html"><span>下一案例</span><strong>NO.23 从老板报价到长尾承接</strong></a></nav>
+      <p class="case-back"><a href="../index.html">← 返回案例索引</a></p>
+    </article>
+
+    <aside class="case-aside">
+      <div class="aside-inner">
+        <p class="aside-label">本案例问答</p>
+        <nav class="aside-toc" id="toc"><a href="#q1" data-target="q1">Q1<em>场景与问题</em></a><a href="#q2" data-target="q2">Q2<em>过去做法</em></a><a href="#q3" data-target="q3">Q3<em>方案与步骤</em></a><a href="#q4" data-target="q4">Q4<em>实际效果</em></a><a href="#q5" data-target="q5">Q5<em>挑战与解决</em></a><a href="#q6" data-target="q6">Q6<em>经验建议</em></a></nav>
+        <a class="aside-all" href="../index.html">案例索引</a>
+      </div>
+    </aside>
+  </div>
+</main>
+<div class="mobile-jump">
+  <select id="case-jump" aria-label="跳到其他案例"><option value="no-01.html">NO.1 从师徒带教到AI辅助培训</option><option value="no-02.html">NO.2 从人工审材料到自动化办件</option><option value="no-03.html">NO.3 从案头工作到智能协作</option><option value="no-04.html">NO.4 从人工研判到智能调度</option><option value="no-05.html">NO.5 从大海捞针到全链路提效</option><option value="no-06.html">NO.6 从经验装车到智能规划</option><option value="no-07.html">NO.7 从个人提效到组织能力</option><option value="no-08.html">NO.8 从物料难找到精准定位</option><option value="no-09.html">NO.9 从“表哥表姐”到智能执行</option><option value="no-10.html">NO.10 从人工核对到智能对账</option><option value="no-11.html">NO.11 从文件散乱到随取随用</option><option value="no-12.html">NO.12 从人工盯图到公司级生产</option><option value="no-13.html">NO.13 从纸质流程到数据驱动</option><option value="no-14.html">NO.14 从技术交付到业务自驱</option><option value="no-15.html">NO.15 从经验写稿到稳定量产</option><option value="no-16.html">NO.16 从人工分析到分钟级洞察</option><option value="no-17.html">NO.17 从老师傅报价到AI深度协同</option><option value="no-18.html">NO.18 从纸质台账到AI经营</option><option value="no-19.html">NO.19 从人工排队到审核前置</option><option value="no-20.html">NO.20 从看不清订单到看清经营</option><option value="no-21.html">NO.21 从人工绘图到智能协作</option><option value="no-22.html" selected>NO.22 从库存割裂到业务联动</option><option value="no-23.html">NO.23 从老板报价到长尾承接</option><option value="no-24.html">NO.24 从发货到动销</option></select>
+</div>
+
+<footer class="site-footer">
+  <p>内容来源：Datawhale《FDE案例100》（2026 年 9 月），本站为非官方阅读版，仅供学习交流。</p>
+  <p class="footer-meta">由 <code>build_site.py</code> 从 Markdown 生成 · 托管于 GitHub Pages</p>
+</footer>
+<div class="search-overlay" id="search-overlay" hidden>
+  <div class="search-panel" role="dialog" aria-modal="true" aria-label="全文搜索">
+    <div class="search-field">
+      <span class="search-btn-icon">⌕</span>
+      <input id="search-input" type="search" placeholder="搜索案例、行业、痛点、方案……" autocomplete="off">
+      <kbd>Esc</kbd>
+    </div>
+    <div class="search-hint" id="search-hint">输入关键词，例如「OCR」「财务对账」「知识库」</div>
+    <ul class="search-results" id="search-results"></ul>
+  </div>
+</div>
+<script src="../assets/app.js"></script>
+</body>
+</html>
