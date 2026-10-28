@@ -359,7 +359,7 @@ def build_case(case: dict, prev: dict | None, nxt: dict | None, cases: list[dict
 
       <section class="case-intro">
         <h2 class="section-label">案例简介</h2>
-        <p class="case-lead">{"".join(inline(p) for p in case['summary'])}</p>
+        {''.join(f'<p class="case-lead">{inline(p)}</p>' for p in case['summary'])}
         <h2 class="section-label">适用人群</h2>
         <ul class="audience">{audience}</ul>
       </section>
@@ -428,7 +428,7 @@ def build_all(cases: list[dict]) -> str:
             f"""<section class="all-case" id="{slug(c['no'])}">
   <h2><a href="cases/{slug(c['no'])}.html">{c['no']}　{html.escape(c['title'])}</a></h2>
   <p class="all-meta">{html.escape(' · '.join(c['tags']))}　｜　讲述人：{html.escape(c['speaker'])}</p>
-  <p class="all-lead">{''.join(inline(p) for p in c['summary'])}</p>
+  {''.join(f'<p class="all-lead">{inline(p)}</p>' for p in c['summary'])}
   {qas}
 </section>"""
         )

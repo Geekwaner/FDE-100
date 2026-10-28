@@ -348,6 +348,7 @@ kbd {
 }
 .case-intro .section-label:not(:first-child) { margin-top: 20px; }
 .case-lead { margin: 0; font-size: 15.5px; color: var(--ink-2); line-height: 1.9; }
+.case-lead + .case-lead { margin-top: .85em; }
 .audience { margin: 0; padding-left: 18px; font-size: 14.5px; color: var(--ink-2); line-height: 1.85; }
 
 .qa-list { margin-top: 18px; }
