@@ -462,8 +462,24 @@ def build_all(cases: list[dict]) -> str:
 
 
 # ---------------------------------------------------------------- AI 问答（自建界面 + 后端代理）
-# 前端调用自建代理，API Key 只存在代理服务端；部署后用 CHAT_API_BASE 环境变量指向代理地址
-CHAT_API = os.environ.get("CHAT_API_BASE", "/api/chat")
+# 前端调用自建代理，API Key 只存在代理服务端。
+# 地址取值优先级：环境变量 CHAT_API_BASE > site.config.json 的 chatApiBase > 同源 /api/chat
+# 用配置文件兜底，避免"随手 python build_site.py"把线上地址覆盖回默认值。
+CONFIG_FILE = ROOT / "site.config.json"
+
+
+def _chat_api() -> str:
+    if os.environ.get("CHAT_API_BASE"):
+        return os.environ["CHAT_API_BASE"]
+    if CONFIG_FILE.exists():
+        try:
+            return json.loads(CONFIG_FILE.read_text(encoding="utf-8")).get("chatApiBase", "/api/chat")
+        except json.JSONDecodeError:
+            pass
+    return "/api/chat"
+
+
+CHAT_API = _chat_api()
 
 
 def build_chat() -> str:

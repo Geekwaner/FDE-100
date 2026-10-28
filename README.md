@@ -75,15 +75,15 @@ npx wrangler deploy --config worker/wrangler.toml
 
 ### 指向前端
 
-代理上线后，把地址写进构建环境变量再重建：
+代理地址写在 **`site.config.json`**（已入库，改完直接 `python build_site.py` 生效）：
 
-```powershell
-$env:CHAT_API_BASE='https://innovative-bass-d0f4jspo82b42e21-1310552826.ap-shanghai.app.tcloudbase.com/dify'
-python build_site.py
-git add -A; git commit -m "指向问答代理"; git push
+```json
+{ "chatApiBase": "https://…app.tcloudbase.com/dify" }
 ```
 
-不设置时默认 `/api/chat`（要求与站点同源，适合 `server/proxy.mjs` 这种自带静态托管的方案）。
+优先级：环境变量 `CHAT_API_BASE` > `site.config.json` > 默认 `/api/chat`（同源，适合 `server/proxy.mjs`）。
+
+> 用配置文件而不是纯环境变量，是为了防止"随手 `python build_site.py` 一次，把线上地址覆盖回默认值"——这个坑真的踩过一次。
 
 > `.env` 里放 `Dify_key=app-xxxx` 仅供本地/服务器使用，已在 `.gitignore` 中，不会进仓库。如果 Key 曾经出现在提交历史或截图里，去 Dify 后台重置。
 
