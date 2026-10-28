@@ -1,6 +1,9 @@
 # FDE 案例 100 · 阅读版
 
-Datawhale《FDE案例100》的静态阅读站点。纯 HTML / CSS / JavaScript，**没有构建依赖、没有 CDN、没有外链字体**，可以直接托管在 GitHub Pages 的 `用户名.github.io/仓库名` 路径下。
+Datawhale《FDE案例100》的静态阅读站点。纯 HTML / CSS / JavaScript，**没有构建依赖、没有 CDN、没有外链字体**，直接托管在 GitHub Pages 上。
+
+- 仓库：https://github.com/Geekwaner/FDE-100
+- 站点：https://geekwaner.github.io/FDE-100/
 
 ## 站点结构
 
@@ -27,23 +30,16 @@ python -m http.server 8765    # 打开 http://127.0.0.1:8765
 
 ## 部署到 GitHub Pages
 
-```powershell
-git init -b main
-git add .
-git commit -m "FDE 案例 100 阅读站"
-git remote add origin https://github.com/<你的用户名>/<仓库名>.git
-git push -u origin main
-```
+仓库已推到 `main`，Pages 只需在网页上开启一次（Settings 无法用 git 命令设置）：
 
-然后到仓库 **Settings → Pages**：
+1. 打开 https://github.com/Geekwaner/FDE-100/settings/pages
+2. **Source** 选 `Deploy from a branch`
+3. **Branch** 选 `main`，目录选 `/ (root)`，Save
+4. 等 1–2 分钟，访问 https://geekwaner.github.io/FDE-100/
 
-- Source 选 **Deploy from a branch**
-- Branch 选 **`main`**，目录选 **`/ (root)`**
-- Save
+之后每次 `git push` 到 `main`，Pages 会自动重新发布，不需要额外配置 CI。
 
-等 1–2 分钟，访问 `https://<你的用户名>.github.io/<仓库名>/`。
-
-> 站点根目录已放 `.nojekyll`，跳过 Jekyll 处理；所有链接都是相对路径，所以放在子路径（`/仓库名/`）下也不会出错。如果以后要绑自定义域名，在 Pages 设置里填域名即可，不用改代码。
+> 站点根目录已放 `.nojekyll`，跳过 Jekyll 处理；所有链接都是相对路径，所以放在子路径（`/FDE-100/`）下也不会出错。如果以后要绑自定义域名，在 Pages 设置里填域名即可，不用改代码。
 
 ## 内容更新流程
 
