@@ -46,16 +46,26 @@ node server/proxy.mjs         # 起站 + 问答代理，打开 http://127.0.0.1:
 
 ### 部署代理
 
-**A. 自己的服务器（推荐，SSE 最稳）**
+**当前采用：腾讯云 CloudBase 云函数**（`cloudfunctions/dify-proxy/`）
+
+环境：`innovative-bass-d0f4jspo82b42e21`（ap-shanghai）
+
+- 云函数 `dify-proxy`：Nodejs18.15，超时 60s，环境变量 `DIFY_API_KEY` / `DIFY_API_BASE` / `ALLOW_ORIGIN`
+- HTTP 网关路由：`/dify` → 云函数，路径透传关闭，关闭鉴权与合法域名校验
+- 调用地址：`https://innovative-bass-d0f4jspo82b42e21-1310552826.ap-shanghai.app.tcloudbase.com/dify`
+- 健康检查：`…/dify/health`
+
+CloudBase 的 HTTP 访问服务会把响应整体返回（无 SSE），所以云函数用 Dify 的 `blocking` 模式，实测 7–15s 返回；前端 `chat.js` 检测到不是 `text/event-stream` 就自动按 JSON 整段渲染。
+
+**备选 A：自己的服务器（要大模型逐字输出的体验就用这条）**
 
 ```bash
-# 服务器上，仓库目录内
 DIFY_KEY=app-xxxx ALLOW_ORIGIN=https://geekwaner.github.io PORT=8787 node server/proxy.mjs
 ```
 
-用 systemd/pm2 常驻，nginx 反代时务必关缓冲：`proxy_buffering off; proxy_read_timeout 300s;`
+systemd/pm2 常驻，nginx 反代务必关缓冲：`proxy_buffering off; proxy_read_timeout 300s;`
 
-**B. Cloudflare Worker**
+**备选 B：Cloudflare Worker**
 
 ```bash
 npx wrangler login
@@ -68,12 +78,12 @@ npx wrangler deploy --config worker/wrangler.toml
 代理上线后，把地址写进构建环境变量再重建：
 
 ```powershell
-$env:CHAT_API_BASE='https://你的代理域名/api/chat'
+$env:CHAT_API_BASE='https://innovative-bass-d0f4jspo82b42e21-1310552826.ap-shanghai.app.tcloudbase.com/dify'
 python build_site.py
 git add -A; git commit -m "指向问答代理"; git push
 ```
 
-不设置时默认 `/api/chat`（即要求与站点同源，适合 `server/proxy.mjs` 这种自带静态托管的方案）。
+不设置时默认 `/api/chat`（要求与站点同源，适合 `server/proxy.mjs` 这种自带静态托管的方案）。
 
 > `.env` 里放 `Dify_key=app-xxxx` 仅供本地/服务器使用，已在 `.gitignore` 中，不会进仓库。如果 Key 曾经出现在提交历史或截图里，去 Dify 后台重置。
 

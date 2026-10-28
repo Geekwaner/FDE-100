@@ -1,0 +1,9 @@
+{
+  "name": "dify-proxy",
+  "version": "1.0.0",
+  "description": "CloudBase 云函数：Dify 后端 API 代理（Key 不出服务端）",
+  "main": "index.js",
+  "engines": {
+    "node": ">=18"
+  }
+}

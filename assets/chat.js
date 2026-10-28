@@ -270,6 +270,21 @@
           throw new Error(j.error || ('HTTP ' + res.status));
         });
       }
+      /* 代理若被平台缓冲（拿不到 SSE），退化成一次性返回 JSON */
+      var ctype = (res.headers && res.headers.get('content-type')) || '';
+      if (ctype.indexOf('text/event-stream') === -1) {
+        return res.json().then(function (d) {
+          answer = (d && d.answer) || '';
+          if (d && d.conversation_id) state.convId = d.conversation_id;
+          srcList = d && d.metadata && d.metadata.retriever_resources;
+          var t = visible(answer).trim();
+          if (t) {
+            clearStatus();
+            ab.body.innerHTML = render(t);
+            scrollBottom();
+          }
+        });
+      }
       if (!res.body) throw new Error('当前浏览器不支持流式读取');
 
       var reader = res.body.getReader();
