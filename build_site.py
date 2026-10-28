@@ -15,6 +15,7 @@
 import hashlib
 import html
 import json
+import os
 import re
 import shutil
 from pathlib import Path
@@ -200,7 +201,11 @@ def excerpt(case: dict, n: int = 78) -> str:
 
 
 # ---------------------------------------------------------------- 页面骨架
-def shell(title: str, root: str, body: str, active: str = "", desc: str = SITE_SUB) -> str:
+def shell(title: str, root: str, body: str, active: str = "", desc: str = SITE_SUB, data: dict | None = None) -> str:
+    extra_data = "".join(f' data-{k}="{html.escape(v)}"' for k, v in (data or {}).items())
+    extra_js = ""
+    if active == "chat":
+        extra_js = f'<script src="{root}assets/chat.js{ASSET_VER}"></script>'
     nav = [
         ("index.html", "案例索引", "index"),
         ("all.html", "全文", "all"),
@@ -224,7 +229,7 @@ def shell(title: str, root: str, body: str, active: str = "", desc: str = SITE_S
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23b3402b'/%3E%3Ctext x='16' y='22' font-family='Georgia,serif' font-size='15' fill='%23faf7f0' text-anchor='middle'%3EF%3C/text%3E%3C/svg%3E">
 <link rel="stylesheet" href="{root}assets/style.css{ASSET_VER}">
 </head>
-<body data-root="{root}" data-ver="{ASSET_VER}" class="page-{active or 'doc'}">
+<body data-root="{root}" data-ver="{ASSET_VER}"{extra_data} class="page-{active or 'doc'}">
 <div class="progress" id="progress"></div>
 <header class="site-header">
   <a class="brand" href="{root}index.html">
@@ -253,6 +258,7 @@ def shell(title: str, root: str, body: str, active: str = "", desc: str = SITE_S
   </div>
 </div>
 <script src="{root}assets/app.js{ASSET_VER}"></script>
+{extra_js}
 </body>
 </html>
 """
@@ -455,38 +461,44 @@ def build_all(cases: list[dict]) -> str:
     return shell(f"全文 · {SITE_NAME}", "", body, active="all")
 
 
-# ---------------------------------------------------------------- AI 问答（Dify 嵌入）
-CHAT_URL = "https://udify.app/chatbot/uebvgPRnJKxeb3eY"
+# ---------------------------------------------------------------- AI 问答（自建界面 + 后端代理）
+# 前端调用自建代理，API Key 只存在代理服务端；部署后用 CHAT_API_BASE 环境变量指向代理地址
+CHAT_API = os.environ.get("CHAT_API_BASE", "/api/chat")
 
 
 def build_chat() -> str:
     body = f"""
-<main class="chat-wrap">
-  <div class="chat-bar">
-    <span class="chat-note">基于本案例集知识库回答，可能不准确 —— 请回<a href="index.html">案例原文</a>核对。</span>
-    <a class="chat-open" href="{CHAT_URL}" target="_blank" rel="noopener noreferrer">新窗口打开 ↗</a>
-  </div>
-  <div class="chat-frame">
-    <div class="chat-loading" id="chat-loading">
-      <div class="chat-loading-inner">
-        <span class="spinner" aria-hidden="true"></span>
-        <p class="chat-loading-title">正在载入问答界面…</p>
-        <p class="chat-loading-sub" id="chat-loading-sub">问答由 Dify 托管（udify.app），资源较大；网络较慢时可能需要半分钟以上。<a href="{CHAT_URL}" target="_blank" rel="noopener noreferrer">在新窗口打开</a></p>
+<main class="chat-page">
+  <div class="chat-shell">
+    <header class="chat-head">
+      <p class="chat-kicker">AI 问答</p>
+      <h1 class="chat-title">问这本案例集</h1>
+      <p class="chat-sub">回答由案例知识库检索生成，会附引用来源；不确定处请回<a href="index.html">案例原文</a>核对。支持连续追问。</p>
+    </header>
+    <div class="chat-log" id="chat-log" aria-live="polite"></div>
+    <form class="chat-form" id="chat-form">
+      <textarea id="chat-input" rows="1" placeholder="例如：制造业那家德国企业是怎么把老师傅经验留下来的？"></textarea>
+      <div class="chat-form-bar">
+        <span class="chat-hint">Enter 发送 · Shift+Enter 换行</span>
+        <span class="chat-actions">
+          <button type="button" class="chat-reset" id="chat-reset">新对话</button>
+          <button type="submit" class="chat-send" id="chat-send">发送</button>
+          <button type="button" class="chat-stop" id="chat-stop" hidden>停止</button>
+        </span>
       </div>
-    </div>
-    <iframe
-      src="{CHAT_URL}"
-      title="FDE 案例 100 · AI 问答"
-      frameborder="0"
-      allow="microphone;clipboard-write"
-      loading="eager"></iframe>
+    </form>
+    <noscript><p class="chat-disclaimer">需要启用 JavaScript 才能使用问答。</p></noscript>
   </div>
-  <noscript>
-    <p class="chat-note">当前浏览器未启用 JavaScript，请<a href="{CHAT_URL}">在新窗口打开问答</a>。</p>
-  </noscript>
 </main>
 """
-    return shell(f"AI 问答 · {SITE_NAME}", "", body, active="chat", desc="基于 FDE 案例 100 知识库的 AI 问答")
+    return shell(
+        f"AI 问答 · {SITE_NAME}",
+        "",
+        body,
+        active="chat",
+        desc="基于 FDE 案例 100 知识库的 AI 问答",
+        data={"api": CHAT_API},
+    )
 
 
 # ---------------------------------------------------------------- 404
@@ -533,7 +545,7 @@ def build_search_index(cases: list[dict]) -> str:
 def main() -> None:
     global ASSET_VER
     digest = hashlib.md5()
-    for name in ("app.js", "style.css"):
+    for name in ("app.js", "style.css", "chat.js"):
         digest.update((ASSETS / name).read_bytes())
     ASSET_VER = "?v=" + digest.hexdigest()[:8]
 

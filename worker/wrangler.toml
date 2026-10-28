@@ -1,0 +1,7 @@
+name = "fde-dify-proxy"
+main = "index.js"
+compatibility_date = "2025-01-01"
+
+[vars]
+DIFY_API_BASE = "https://api.dify.ai/v1"
+ALLOW_ORIGIN = "https://geekwaner.github.io"

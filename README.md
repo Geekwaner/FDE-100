@@ -11,7 +11,7 @@ Datawhale《FDE案例100》的静态阅读站点。纯 HTML / CSS / JavaScript�
 | --- | --- |
 | `index.html` | 首页：24 个案例卡片、按行业筛选、全站搜索入口 |
 | `cases/no-XX.html` | 单个案例详情：案例简介、适用人群、Q1–Q6 六个问答、上下篇导航 |
-| `chat.html` | AI 问答：内嵌 Dify 聊天机器人（`udify.app`），带加载态与兜底链接 |
+| `chat.html` | AI 问答：自建聊天界面 + 流式输出，走自建代理调用 Dify 后端 API |
 | `appendix.html` | 附录 A 案例索引 + 附录 B 前言 |
 | `all.html` | 24 个案例全文单页版（适合 Ctrl+F 与打印） |
 | `404.html` | GitHub Pages 自定义 404 |
@@ -24,10 +24,58 @@ Datawhale《FDE案例100》的静态阅读站点。纯 HTML / CSS / JavaScript�
 ```powershell
 cd Datawhale-FDE
 python build_site.py          # 由 Markdown 重新生成站点
-python -m http.server 8765    # 打开 http://127.0.0.1:8765
+node server/proxy.mjs         # 起站 + 问答代理，打开 http://127.0.0.1:8787/
 ```
 
-直接双击 `index.html` 也能读，但 `file://` 下检索索引会因浏览器安全策略加载失败，建议用上面的本地服务器。
+`server/proxy.mjs` 同时托管静态站点并代理 `/api/chat`，本地与线上同源，问答可以直接用。纯静态预览（不含问答）也可以 `python -m http.server 8765`，但 `file://` 下检索索引会因浏览器安全策略加载失败。
+
+## AI 问答：为什么需要一个后端
+
+静态站不能持有 `app-xxxx` 这类 Dify API Key——仓库是公开的，写进 JS 等于把额度送人。所以链路拆成两段：
+
+```
+浏览器  ──POST /api/chat──▶  自建代理（持 Key）──▶  https://api.dify.ai/v1/chat-messages
+   ▲                                                          │
+   └──────────────── SSE 流式回传（逐字渲染）──────────────────┘
+```
+
+- 前端：`assets/chat.js`，SSE 逐字渲染、多轮记忆（`conversation_id`）、停止生成、引用来源链回案例页、自动过滤 deepseek 的 `<think>` 思考过程
+- 代理：二选一，都只做三件事——藏 Key、加 CORS、透传 SSE
+  - `server/proxy.mjs`：零依赖 Node 服务（VPS / 本机），顺带托管静态站
+  - `worker/index.js` + `worker/wrangler.toml`：Cloudflare Worker
+
+### 部署代理
+
+**A. 自己的服务器（推荐，SSE 最稳）**
+
+```bash
+# 服务器上，仓库目录内
+DIFY_KEY=app-xxxx ALLOW_ORIGIN=https://geekwaner.github.io PORT=8787 node server/proxy.mjs
+```
+
+用 systemd/pm2 常驻，nginx 反代时务必关缓冲：`proxy_buffering off; proxy_read_timeout 300s;`
+
+**B. Cloudflare Worker**
+
+```bash
+npx wrangler login
+npx wrangler secret put DIFY_API_KEY --config worker/wrangler.toml
+npx wrangler deploy --config worker/wrangler.toml
+```
+
+### 指向前端
+
+代理上线后，把地址写进构建环境变量再重建：
+
+```powershell
+$env:CHAT_API_BASE='https://你的代理域名/api/chat'
+python build_site.py
+git add -A; git commit -m "指向问答代理"; git push
+```
+
+不设置时默认 `/api/chat`（即要求与站点同源，适合 `server/proxy.mjs` 这种自带静态托管的方案）。
+
+> `.env` 里放 `Dify_key=app-xxxx` 仅供本地/服务器使用，已在 `.gitignore` 中，不会进仓库。如果 Key 曾经出现在提交历史或截图里，去 Dify 后台重置。
 
 ## 部署到 GitHub Pages
 
