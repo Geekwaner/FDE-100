@@ -180,7 +180,7 @@ Nginx 侧还需要 `proxy_buffering off; proxy_read_timeout 300s;`。
 | 流式输出 | ✅ 已上线 | 云托管容器版代理透传 SSE，浏览器逐段渲染 |
 | 首字延迟 | 3.9s（首字节）/ 11.3s（首段可见） | 差距来自检索 + 推理模型思考；关掉 reasoning 能明显提前 |
 | 冷启动 | 有 | 云托管 `MinNum=0`，闲置后首个请求要多等几秒；在意体验可改 `MinNum=1`（一直计费） |
-| 限流 | ⚠️ 未启用 | 网关 `perClient` QPS 或服务内 IP 计数，二选一即可 |
+| 限流 | ✅ 已启用 | 代理内做三层计数：每 IP 每分钟 20 次 / 每 IP 每天 100 次 / 全站每天 500 次，超限 `429 + Retry-After`。单实例内存计数，冷启动会重置 |
 | 用户体系 | ❌ 无 | 全员共用 `user=web`，Dify 侧不区分人 |
 | 成本统计 | ❌ 无 | `message_end.metadata.usage` 可落库统计 |
 

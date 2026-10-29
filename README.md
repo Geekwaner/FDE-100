@@ -58,7 +58,17 @@ node server/proxy.mjs         # 起站 + 问答代理，打开 http://127.0.0.1:
 - 规格 0.25 核 / 0.5G，`MinNum=0`（无请求时缩容到 0，省钱；代价是冷启动）
 - 端口 8080，环境变量 `DIFY_API_KEY` / `DIFY_API_BASE` / `ALLOW_ORIGIN`
 - 地址：`https://dify-proxy-337606-12-1310552826.sh.run.tcloudbase.com`
-- 健康检查：`…/health`
+- 健康检查：`…/health`（会返回当前限流配置与今日已用次数）
+
+**限流**（防别人刷你的 Dify 额度）：
+
+| 变量 | 默认 | 含义 |
+| --- | --- | --- |
+| `RATE_LIMIT_PER_MIN` | 20 | 每 IP 每分钟提问次数 |
+| `RATE_LIMIT_PER_DAY` | 100 | 每 IP 每天提问次数 |
+| `GLOBAL_DAILY_CAP` | 500 | 全站每天总次数 |
+
+超限返回 `429` + `Retry-After` 秒数，前端直接把服务端文案显示给用户（"提问有点频繁，请 N 秒后再试"）。任一设为 `0` 即关闭该项。计数在单实例内存里，**冷启动/扩容会重置**——用于挡滥用足够，要精确配额得换 Redis。
 
 重新部署（改完 `cloudrun/dify-proxy/` 里的代码后）：
 

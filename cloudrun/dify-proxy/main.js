@@ -5,6 +5,8 @@
  * 容器里自己 res.write() 就是逐块下发，前端能逐字渲染。
  *
  * 环境变量：DIFY_API_KEY / DIFY_API_BASE / ALLOW_ORIGIN / PORT
+ * 限流：RATE_LIMIT_PER_MIN（每 IP 每分钟，默认 20）/ RATE_LIMIT_PER_DAY（每 IP 每天，默认 100）
+ *       GLOBAL_DAILY_CAP（全站每天总次数，默认 500）。任一设为 0 即关闭该项。
  */
 
 import http from "node:http";
@@ -14,6 +16,71 @@ const KEY = process.env.DIFY_API_KEY || "";
 const BASE = (process.env.DIFY_API_BASE || "https://api.dify.ai/v1").replace(/\/$/, "");
 const ALLOW = (process.env.ALLOW_ORIGIN || "*").split(",").map((s) => s.trim()).filter(Boolean);
 const PORT = Number(process.env.PORT || 8080);
+
+const LIMIT_MIN = Number(process.env.RATE_LIMIT_PER_MIN ?? 20);
+const LIMIT_DAY = Number(process.env.RATE_LIMIT_PER_DAY ?? 100);
+const GLOBAL_CAP = Number(process.env.GLOBAL_DAILY_CAP ?? 500);
+
+/* ------------------------------------------------------------------ 限流
+ * 单实例内存计数：冷启动/扩容会重置，属于"挡滥用"而不是"精确配额"。
+ * 需要精确配额应换成 Redis 之类的共享存储。
+ */
+const buckets = new Map(); // ip -> { minStart, minCount, dayKey, dayCount }
+let globalDay = { key: dayKey(), count: 0 };
+
+function today() {
+  return new Date(Date.now() + 8 * 3600_000).toISOString().slice(0, 10); // 按 UTC+8 的自然日
+}
+function dayKey() {
+  return today();
+}
+function clientIp(req) {
+  const xff = req.headers["x-forwarded-for"];
+  if (xff) return String(xff).split(",")[0].trim();
+  return req.socket.remoteAddress || "unknown";
+}
+
+function take(ip) {
+  const now = Date.now();
+  const key = today();
+  if (globalDay.key !== key) globalDay = { key, count: 0 };
+
+  let b = buckets.get(ip);
+  if (!b) {
+    b = { minStart: now, minCount: 0, dayKey: key, dayCount: 0 };
+    buckets.set(ip, b);
+  }
+  if (b.dayKey !== key) {
+    b.dayKey = key;
+    b.dayCount = 0;
+  }
+  if (now - b.minStart >= 60_000) {
+    b.minStart = now;
+    b.minCount = 0;
+  }
+
+  if (LIMIT_MIN > 0 && b.minCount >= LIMIT_MIN) {
+    const wait = Math.max(1, Math.ceil((60_000 - (now - b.minStart)) / 1000));
+    return { ok: false, retry: wait, msg: `提问有点频繁，请 ${wait} 秒后再试。` };
+  }
+  if (LIMIT_DAY > 0 && b.dayCount >= LIMIT_DAY) {
+    return { ok: false, retry: 3600, msg: "今天的提问次数已用完，明天再来吧。" };
+  }
+  if (GLOBAL_CAP > 0 && globalDay.count >= GLOBAL_CAP) {
+    return { ok: false, retry: 3600, msg: "本站今日提问总量已达上限，请明天再试。" };
+  }
+
+  b.minCount += 1;
+  b.dayCount += 1;
+  globalDay.count += 1;
+
+  if (buckets.size > 5000) {
+    for (const [k, v] of buckets) {
+      if (v.dayKey !== key) buckets.delete(k);
+    }
+  }
+  return { ok: true };
+}
 
 function cors(origin) {
   const value = ALLOW.includes("*") ? "*" : ALLOW.includes(origin) ? origin : ALLOW[0] || "null";
@@ -96,11 +163,29 @@ const server = http.createServer(async (req, res) => {
     return res.end();
   }
   if (url.pathname === "/health" || url.pathname === "/api/health") {
-    return json(res, head, 200, { ok: true, upstream: BASE, key: Boolean(KEY), port: PORT });
+    return json(res, head, 200, {
+      ok: true,
+      upstream: BASE,
+      key: Boolean(KEY),
+      port: PORT,
+      limits: {
+        perMin: LIMIT_MIN,
+        perDay: LIMIT_DAY,
+        globalDaily: GLOBAL_CAP,
+        globalUsedToday: globalDay.count,
+        trackedIps: buckets.size,
+      },
+    });
   }
   if (url.pathname === "/api/chat") {
     if (req.method !== "POST") return json(res, head, 405, { error: "请用 POST" });
     if (!KEY) return json(res, head, 500, { error: "服务端未配置 DIFY_API_KEY" });
+
+    const gate = take(clientIp(req));
+    if (!gate.ok) {
+      res.setHeader("Retry-After", String(gate.retry));
+      return json(res, head, 429, { error: gate.msg, retryAfter: gate.retry });
+    }
     return handleChat(req, res, head);
   }
   return json(res, head, 404, { error: "未知路径，可用：POST /api/chat、GET /health" });

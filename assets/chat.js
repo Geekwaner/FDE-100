@@ -267,7 +267,11 @@
     }).then(function (res) {
       if (!res.ok) {
         return res.json().catch(function () { return {}; }).then(function (j) {
-          throw new Error(j.error || ('HTTP ' + res.status));
+          var e = new Error(j.error || ('HTTP ' + res.status));
+          e.status = res.status;
+          /* 服务端给了可读文案（如限流提示）就直接展示，不再套"请求失败：" */
+          e.userFacing = j.error || '';
+          throw e;
         });
       }
       /* 代理若被平台缓冲（拿不到 SSE），退化成一次性返回 JSON */
@@ -355,12 +359,16 @@
         save();
       } else {
         if (!answer) ab.row.remove();
-        var offline = /404|Failed to fetch|NetworkError|502|503/i.test(err.message);
-        errorBox(
-          offline
-            ? '问答服务暂时不可用（后端未连接）。可以稍后重试，或先用站内搜索查原文。'
-            : '请求失败：' + err.message
-        );
+        if (err.userFacing) {
+          errorBox(err.userFacing);
+        } else {
+          var offline = /404|Failed to fetch|NetworkError|502|503/i.test(err.message);
+          errorBox(
+            offline
+              ? '问答服务暂时不可用（后端未连接）。可以稍后重试，或先用站内搜索查原文。'
+              : '请求失败：' + err.message
+          );
+        }
         console.error('[chat]', err);
       }
     }).then(function () {
