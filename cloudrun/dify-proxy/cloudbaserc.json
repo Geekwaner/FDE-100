@@ -1,0 +1,6 @@
+{
+  "envId": "innovative-bass-d0f4jspo82b42e21",
+  "cloudrun": {
+    "name": "dify-proxy"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "name": "dify-proxy-cloudrun",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "云托管容器版 Dify 代理（支持 SSE 流式）",
+  "main": "main.js",
+  "scripts": {
+    "start": "node main.js"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

@@ -40,24 +40,34 @@ node server/proxy.mjs         # 起站 + 问答代理，打开 http://127.0.0.1:
 ```
 
 - 前端：`assets/chat.js`，SSE 逐字渲染、多轮记忆（`conversation_id`）、停止生成、引用来源链回案例页、自动过滤 deepseek 的 `<think>` 思考过程
-- 代理：二选一，都只做三件事——藏 Key、加 CORS、透传 SSE
-  - `server/proxy.mjs`：零依赖 Node 服务（VPS / 本机），顺带托管静态站
-  - `worker/index.js` + `worker/wrangler.toml`：Cloudflare Worker
+- 代理：只做三件事——藏 Key、加 CORS、透传 SSE。仓库里有四份实现，按部署环境挑一份：
+
+| 实现 | 位置 | 流式 | 说明 |
+| --- | --- | --- | --- |
+| **云托管容器（当前线上）** | `cloudrun/dify-proxy/` | ✅ SSE | 容器自己 `res.write()`，真流式；实测首字节 3.9s、首段回答 11.3s、总 15.9s |
+| 云函数 + HTTP 网关 | `cloudfunctions/dify-proxy/` | ❌ 缓冲 | 走 `blocking`，7–16s 整段返回；留着做降级备胎 |
+| Node 自建 | `server/proxy.mjs` | ✅ SSE | VPS / 本机，顺带托管静态站 |
+| Cloudflare Worker | `worker/index.js` | ✅ SSE | 免费，workers.dev 国内不稳 |
 
 ### 部署代理
 
-**当前采用：腾讯云 CloudBase 云函数**（`cloudfunctions/dify-proxy/`）
+**当前线上：CloudBase 云托管（容器型）**
 
-环境：`innovative-bass-d0f4jspo82b42e21`（ap-shanghai）
+环境 `innovative-bass-d0f4jspo82b42e21`（ap-shanghai，Trial），服务名 `dify-proxy`：
 
-- 云函数 `dify-proxy`：Nodejs18.15，超时 60s，环境变量 `DIFY_API_KEY` / `DIFY_API_BASE` / `ALLOW_ORIGIN`
-- HTTP 网关路由：`/dify` → 云函数，路径透传关闭，关闭鉴权与合法域名校验
-- 调用地址：`https://innovative-bass-d0f4jspo82b42e21-1310552826.ap-shanghai.app.tcloudbase.com/dify`
-- 健康检查：`…/dify/health`
+- 规格 0.25 核 / 0.5G，`MinNum=0`（无请求时缩容到 0，省钱；代价是冷启动）
+- 端口 8080，环境变量 `DIFY_API_KEY` / `DIFY_API_BASE` / `ALLOW_ORIGIN`
+- 地址：`https://dify-proxy-337606-12-1310552826.sh.run.tcloudbase.com`
+- 健康检查：`…/health`
 
-CloudBase 的 HTTP 访问服务会把响应整体返回（无 SSE），所以云函数用 Dify 的 `blocking` 模式，实测 7–15s 返回；前端 `chat.js` 检测到不是 `text/event-stream` 就自动按 JSON 整段渲染。
+重新部署（改完 `cloudrun/dify-proxy/` 里的代码后）：
 
-**备选 A：自己的服务器（要大模型逐字输出的体验就用这条）**
+```powershell
+# 在 Claude/CodeBuddy 里让 MCP 执行即可，等价 CLI 命令：
+# tcb cloudrun deploy dify-proxy -e innovative-bass-d0f4jspo82b42e21 --path cloudrun/dify-proxy
+```
+
+**备选 A：自己的服务器**
 
 ```bash
 DIFY_KEY=app-xxxx ALLOW_ORIGIN=https://geekwaner.github.io PORT=8787 node server/proxy.mjs
@@ -78,7 +88,7 @@ npx wrangler deploy --config worker/wrangler.toml
 代理地址写在 **`site.config.json`**（已入库，改完直接 `python build_site.py` 生效）：
 
 ```json
-{ "chatApiBase": "https://…app.tcloudbase.com/dify" }
+{ "chatApiBase": "https://dify-proxy-337606-12-1310552826.sh.run.tcloudbase.com/api/chat" }
 ```
 
 优先级：环境变量 `CHAT_API_BASE` > `site.config.json` > 默认 `/api/chat`（同源，适合 `server/proxy.mjs`）。
