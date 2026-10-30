@@ -1,0 +1,22 @@
+{
+  "name": "fde-agent",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Mastra Agent 服务：向量检索 FDE 案例集并流式回答（Dify 兼容 SSE）",
+  "main": "src/server.js",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "index": "node ../../tools/build-agent-index.mjs"
+  },
+  "dependencies": {
+    "@ai-sdk/openai-compatible": "3.0.81",
+    "@mastra/core": "1.80.0",
+    "express": "5.3.0",
+    "zod": "4.6.7"
+  }
+}

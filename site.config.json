@@ -1,3 +1,4 @@
 {
-  "chatApiBase": "https://dify-proxy-337606-12-1310552826.sh.run.tcloudbase.com/api/chat"
+  "chatApiBase": "https://fde-agent-337606-12-1310552826.sh.run.tcloudbase.com/api/chat",
+  "chatFallback": "https://dify-proxy-337606-12-1310552826.sh.run.tcloudbase.com/api/chat"
 }
