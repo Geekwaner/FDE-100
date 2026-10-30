@@ -181,7 +181,7 @@ Nginx 侧还需要 `proxy_buffering off; proxy_read_timeout 300s;`。
 | 首字延迟 | 3.9s（首字节）/ 11.3s（首段可见） | 差距来自检索 + 推理模型思考；关掉 reasoning 能明显提前 |
 | 冷启动 | 有 | 云托管 `MinNum=0`，闲置后首个请求要多等几秒；在意体验可改 `MinNum=1`（一直计费） |
 | 限流 | ✅ 已启用 | 代理内做三层计数：每 IP 每分钟 20 次 / 每 IP 每天 100 次 / 全站每天 500 次，超限 `429 + Retry-After`。单实例内存计数，冷启动会重置 |
-| 用户体系 | ❌ 无 | 全员共用 `user=web`，Dify 侧不区分人 |
+| 用户体系 | ❌ 无 | 全员共用 `user=web`，不区分人（见第 9 节的 Mastra 版本仍是如此） |
 | 成本统计 | ❌ 无 | `message_end.metadata.usage` 可落库统计 |
 
 **升级路径**：把代理换到自己的服务器（`server/proxy.mjs`，原生支持 SSE）→ 前端自动切回流式；再补用户标识与限流，即可对外小规模开放。
@@ -204,3 +204,60 @@ Nginx 侧还需要 `proxy_buffering off; proxy_read_timeout 300s;`。
 **结果**：问答页从"空白 60 秒"变成 7–16 秒出答案并带可点击引用；换部署平台时前端零改动。
 
 **如果重做**：优先把代理放在支持 SSE 的环境（省掉双模式分支）；同时从第一版就接上 `usage` 统计与限流，避免上线后再补。
+
+---
+
+## 9. 迁移记录：从 Dify 换成自研 Mastra Agent（2026-10-30）
+
+Dify 版本跑通后暴露了三个天花板：检索策略（chunk / top-k / 重排）锁在应用配置里、没有工具调用、评测只能靠肉眼。于是把「知识库 + 编排」整体换成自建服务，**前端一行没改**。
+
+### 9.1 新架构
+
+```
+浏览器（静态站，无密钥）
+   │  POST /api/chat  { query, conversation_id }
+   ▼
+fde-agent（CloudBase 云托管容器，1C/2G，MinNum=0）
+   ├─ embed(query) → 与镜像内 168 块向量算余弦 → top-k（+ 指代追问时提权上一轮案例）
+   ├─ Mastra Agent（Qwen3.8-27B，enable_thinking=false）读片段生成
+   └─ 输出「Dify 兼容 SSE」：workflow_started / message / message_end
+   ▼
+chat.js 逐字渲染 + 引用标签（retriever_resources → NO.x → cases/no-XX.html）
+```
+
+### 9.2 四个关键决策
+
+| 决策 | 选择 | 理由 |
+| --- | --- | --- |
+| 输出协议 | 服务端伪造 Dify 的 SSE 事件 | `chat.js` 已能解析，前端零改动，回退也只改一个地址 |
+| 向量索引落点 | 构建期生成 `chunks.json` + `vectors.bin`，随镜像打包 | 容器 `MinNum=0` 无状态；PG 是 SHARED 租户、容器无 TCP 直连；语料只在发版时变 |
+| 会话记忆 | 实例内 LRU（200 会话 / 每会话 6 轮） | 单轮即可用；冷启动丢上下文可接受；将来换 PG 只改 `memory.js` 两个函数 |
+| 思考模式 | 显式 `enable_thinking: false` | 实测首字 3.4s → 0.4s，且思考 token 会吃光 `maxOutputTokens` 导致正文为空 |
+
+### 9.3 实测对比（同一批问题）
+
+| 指标 | Dify（云托管代理） | Mastra Agent |
+| --- | --- | --- |
+| 首段可见 | 8.5–11.3s | **0.8–1.2s** |
+| 单轮总耗时 | 12–16s | 2–9s |
+| 引用来源 | Dify 检索结果（整本文档名） | 自建检索分块，精确到 `NO.x｜Q3` |
+| 文档外问题 | 偶尔硬答 | 稳定拒答（提示词约束 + top-k 门槛） |
+| 首包协议 | `text/event-stream` | 同（兼容层） |
+
+### 9.4 三个坑（都可复用）
+
+1. **`req.on('close')` 不能判断客户端断开**：POST 的请求流在 body 读完后立刻 close，导致全部增量被当成"已断开"丢弃、响应永不结束（客户端一直转圈）。改用 `res.on('close')` + `res.writableEnded` 判断。
+2. **推理模型的思考 token 会吃光输出预算**：不关 thinking 时 `maxOutputTokens` 被 reasoning 占满，正文为空且耗时 50s。修法是 `providerOptions: { siliconflow: { enable_thinking: false } }`。
+3. **指代追问的检索会漂移**：「这个案例后来效果如何」本身几乎没有可检索词，向量会命中别的案例。修法：从会话里记下上一轮引用过的 `NO.x`，把案例短名拼进检索 query，并给该案例的分块加 0.18 分提权。
+
+### 9.5 运维
+
+- 索引更新：改完案例 Markdown 后 `node tools/build-agent-index.mjs`（增量，按块文本哈希复用旧向量）→ 提交 `data/` → 重新部署
+- 冒烟：`python tools/test-agent-e2e.py <服务地址>/api/chat`，覆盖单案例 / 跨案例 / 多轮指代 / 文档外 / 诱导编造五类
+- 回退：`site.config.json` 的 `chatApiBase` 改回 `chatFallback` 的 Dify 地址，重跑 `build_site.py`
+
+### 9.6 还没做
+
+- 记忆持久化（现在冷启动即失忆）
+- 工具调用（`AGENT_ALLOW_TOOLS=1` 可开启 `searchCases`，默认关，为了首字延迟与可预测性）
+- 评测体系（60 条测试集 + citation/coverage/拒答三类 scorer，下一步）

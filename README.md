@@ -11,7 +11,7 @@ Datawhale《FDE案例100》的静态阅读站点。纯 HTML / CSS / JavaScript�
 | --- | --- |
 | `index.html` | 首页：24 个案例卡片、按行业筛选、全站搜索入口 |
 | `cases/no-XX.html` | 单个案例详情：案例简介、适用人群、Q1–Q6 六个问答、上下篇导航 |
-| `chat.html` | AI 问答：自建聊天界面 + 流式输出，走自建代理调用 Dify 后端 API |
+| `chat.html` | AI 问答：自建聊天界面 + 流式输出，调用自建 Mastra Agent 服务（向量检索案例库） |
 | `appendix.html` | 附录 A 案例索引 + 附录 B 前言 |
 | `all.html` | 24 个案例全文单页版（适合 Ctrl+F 与打印） |
 | `404.html` | GitHub Pages 自定义 404 |
@@ -23,44 +23,52 @@ Datawhale《FDE案例100》的静态阅读站点。纯 HTML / CSS / JavaScript�
 
 ```powershell
 cd Datawhale-FDE
-python build_site.py          # 由 Markdown 重新生成站点
-node server/proxy.mjs         # 起站 + 问答代理，打开 http://127.0.0.1:8787/
+python build_site.py                      # 由 Markdown 重新生成站点
+node tools/build-agent-index.mjs          # 生成问答用的向量索引（改过案例内容才需要）
+cd cloudrun/agent && npm install && npm start   # 起问答服务（端口 8080）
+python -m http.server 8787                # 另开一个终端，预览静态站
 ```
 
-`server/proxy.mjs` 同时托管静态站点并代理 `/api/chat`，本地与线上同源，问答可以直接用。纯静态预览（不含问答）也可以 `python -m http.server 8765`，但 `file://` 下检索索引会因浏览器安全策略加载失败。
+问答页会直接请求云托管地址；本地调试可把 `site.config.json` 的 `chatApiBase` 临时改成 `http://127.0.0.1:8080/api/chat`，并在 `.env` 里加 `ALLOW_ORIGIN` 包含 `http://127.0.0.1:8787`。
 
-## AI 问答：为什么需要一个后端
-
-静态站不能持有 `app-xxxx` 这类 Dify API Key——仓库是公开的，写进 JS 等于把额度送人。所以链路拆成两段：
+## AI 问答：架构
 
 ```
-浏览器  ──POST /api/chat──▶  自建代理（持 Key）──▶  https://api.dify.ai/v1/chat-messages
-   ▲                                                          │
-   └──────────────── SSE 流式回传（逐字渲染）──────────────────┘
+浏览器（静态站，无密钥）
+   │  POST /api/chat  { query, conversation_id }
+   ▼
+fde-agent（CloudBase 云托管容器：Mastra + Express）
+   ├─ 硅基流动 embedding → 与内置 168 个案例块的向量算余弦 → top-k
+   ├─ Mastra Agent（Qwen3.8-27B，关思考）读片段生成答案
+   └─ 以「Dify 兼容 SSE」回写：message / message_end / retriever_resources
+   ▼
+浏览器逐字渲染 + 引用案例标签（NO.x → cases/no-XX.html）
 ```
 
-- 前端：`assets/chat.js`，SSE 逐字渲染、多轮记忆（`conversation_id`）、停止生成、引用来源链回案例页、自动过滤 deepseek 的 `<think>` 思考过程
-- 代理：只做三件事——藏 Key、加 CORS、透传 SSE。仓库里有四份实现，按部署环境挑一份：
+**前端 `assets/chat.js` 一行没改**——服务端刻意实现了 Dify 的事件协议，所以换引擎对界面零影响。
 
-| 实现 | 位置 | 流式 | 说明 |
-| --- | --- | --- | --- |
-| **云托管容器（当前线上）** | `cloudrun/dify-proxy/` | ✅ SSE | 容器自己 `res.write()`，真流式；实测首字节 3.9s、首段回答 11.3s、总 15.9s |
-| 云函数 + HTTP 网关 | `cloudfunctions/dify-proxy/` | ❌ 缓冲 | 走 `blocking`，7–16s 整段返回；留着做降级备胎 |
-| Node 自建 | `server/proxy.mjs` | ✅ SSE | VPS / 本机，顺带托管静态站 |
-| Cloudflare Worker | `worker/index.js` | ✅ SSE | 免费，workers.dev 国内不稳 |
+| 组件 | 位置 | 说明 |
+| --- | --- | --- |
+| **Agent 服务（当前线上）** | `cloudrun/agent/` | Mastra + Express + 向量检索 + 三层限流；首段可见 0.9–1.2s |
+| 索引构建 | `tools/build-agent-index.mjs` | 168 块（24 简介 + 144 问答）× 1024 维，产物入库随镜像打包 |
+| 冒烟脚本 | `tools/test-agent-e2e.py` | 五类问题 + 多轮指代，本地/线上都能跑 |
+| Dify 代理（回退） | `cloudrun/dify-proxy/` | 老的 Dify 转发，服务没删，改 `site.config.json` 即可切回 |
+| 云函数版（备胎） | `cloudfunctions/dify-proxy/` | 无 SSE，7–16s 整段返回 |
+| 其它代理 | `server/proxy.mjs`、`worker/index.js` | VPS / Cloudflare 备用 |
 
-### 部署代理
+### 部署 Agent 服务
 
-**当前线上：CloudBase 云托管（容器型）**
+环境 `innovative-bass-d0f4jspo82b42e21`（ap-shanghai，Trial），服务名 `fde-agent`：
 
-环境 `innovative-bass-d0f4jspo82b42e21`（ap-shanghai，Trial），服务名 `dify-proxy`：
+- 容器：`node:20-alpine` 多阶段构建，只留 `node_modules` + `src` + `data`
+- 规格 1 核 / 2G，`MinNum=0`、`MaxNum=2`，端口 8080
+- 环境变量：`SILICONFLOW_API_KEY` / `SILICONFLOW_BASE_URL` / `SILICONFLOW_MODEL` / `SILICONFLOW_EMBEDDING_MODEL` / `ALLOW_ORIGIN` / 三个限流变量
+- 地址：`https://fde-agent-337606-12-1310552826.sh.run.tcloudbase.com`，健康检查 `…/health`
+- 重新部署：MCP `manageCloudRun action=deploy`（或 `tcb cloudrun deploy fde-agent --path cloudrun/agent`）
 
-- 规格 0.25 核 / 0.5G，`MinNum=0`（无请求时缩容到 0，省钱；代价是冷启动）
-- 端口 8080，环境变量 `DIFY_API_KEY` / `DIFY_API_BASE` / `ALLOW_ORIGIN`
-- 地址：`https://dify-proxy-337606-12-1310552826.sh.run.tcloudbase.com`
-- 健康检查：`…/health`（会返回当前限流配置与今日已用次数）
+**回退到 Dify**：把 `site.config.json` 的 `chatApiBase` 改成 `https://dify-proxy-337606-12-1310552826.sh.run.tcloudbase.com/api/chat`，重跑 `python build_site.py` 提交即可（`chatFallback` 字段里也留了这条地址）。
 
-**限流**（防别人刷你的 Dify 额度）：
+**限流**（防额度被刷，两个服务共用同一套变量与语义）：
 
 | 变量 | 默认 | 含义 |
 | --- | --- | --- |
@@ -70,35 +78,22 @@ node server/proxy.mjs         # 起站 + 问答代理，打开 http://127.0.0.1:
 
 超限返回 `429` + `Retry-After` 秒数，前端直接把服务端文案显示给用户（"提问有点频繁，请 N 秒后再试"）。任一设为 `0` 即关闭该项。计数在单实例内存里，**冷启动/扩容会重置**——用于挡滥用足够，要精确配额得换 Redis。
 
-重新部署（改完 `cloudrun/dify-proxy/` 里的代码后）：
+**Dify 相关备选**（都已部署过，保留作为回退链路）：
 
-```powershell
-# 在 Claude/CodeBuddy 里让 MCP 执行即可，等价 CLI 命令：
-# tcb cloudrun deploy dify-proxy -e innovative-bass-d0f4jspo82b42e21 --path cloudrun/dify-proxy
-```
-
-**备选 A：自己的服务器**
-
-```bash
-DIFY_KEY=app-xxxx ALLOW_ORIGIN=https://geekwaner.github.io PORT=8787 node server/proxy.mjs
-```
-
-systemd/pm2 常驻，nginx 反代务必关缓冲：`proxy_buffering off; proxy_read_timeout 300s;`
-
-**备选 B：Cloudflare Worker**
-
-```bash
-npx wrangler login
-npx wrangler secret put DIFY_API_KEY --config worker/wrangler.toml
-npx wrangler deploy --config worker/wrangler.toml
-```
+- `cloudrun/dify-proxy/`：云托管容器版 Dify 转发，SSE 正常，地址见 `site.config.json` 的 `chatFallback`
+- `cloudfunctions/dify-proxy/`：云函数 + HTTP 网关版，无 SSE（7–16s 整段返回）
+- `server/proxy.mjs`：本地 / VPS 版，`DIFY_KEY=app-xxxx ALLOW_ORIGIN=… PORT=8787 node server/proxy.mjs`
+- `worker/index.js`：Cloudflare Worker 版
 
 ### 指向前端
 
-代理地址写在 **`site.config.json`**（已入库，改完直接 `python build_site.py` 生效）：
+问答地址写在 **`site.config.json`**（已入库，改完直接 `python build_site.py` 生效）：
 
 ```json
-{ "chatApiBase": "https://dify-proxy-337606-12-1310552826.sh.run.tcloudbase.com/api/chat" }
+{
+  "chatApiBase": "https://fde-agent-337606-12-1310552826.sh.run.tcloudbase.com/api/chat",
+  "chatFallback": "https://dify-proxy-337606-12-1310552826.sh.run.tcloudbase.com/api/chat"
+}
 ```
 
 优先级：环境变量 `CHAT_API_BASE` > `site.config.json` > 默认 `/api/chat`（同源，适合 `server/proxy.mjs`）。
