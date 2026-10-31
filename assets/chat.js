@@ -259,12 +259,32 @@
     var ctrl = new AbortController();
     state.ctrl = ctrl;
 
-    fetch(API, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ query: q, conversation_id: state.convId, user: 'web' }),
-      signal: ctrl.signal
-    }).then(function (res) {
+    /* 云托管 MinNum=0，实例缩容到 0 后，冷启动期间网关会返回不带 CORS 头
+       的错误页，浏览器表现为 "Failed to fetch"。这里对网络层失败做退避重试，
+       用户看到的是"服务正在启动"，而不是一个莫名的报错。 */
+    var RETRY_WAITS = [6000, 12000, 20000];
+
+    function postOnce(signal) {
+      return fetch(API, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ query: q, conversation_id: state.convId, user: 'web' }),
+        signal: signal
+      });
+    }
+
+    function postWithRetry(n) {
+      return postOnce(ctrl.signal).catch(function (err) {
+        if (err.name === 'AbortError' || n >= RETRY_WAITS.length) throw err;
+        var wait = RETRY_WAITS[n];
+        status('服务正在启动，' + wait / 1000 + ' 秒后自动重试（' + (n + 1) + '/' + RETRY_WAITS.length + '）…');
+        return new Promise(function (resolve) { setTimeout(resolve, wait); }).then(function () {
+          return postWithRetry(n + 1);
+        });
+      });
+    }
+
+    postWithRetry(0).then(function (res) {
       if (!res.ok) {
         return res.json().catch(function () { return {}; }).then(function (j) {
           var e = new Error(j.error || ('HTTP ' + res.status));
